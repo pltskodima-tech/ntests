@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f2eee5">
+  <title>Маленький тест о нас</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f2eee5;
+      --card: #fffdf8;
+      --ink: #282b24;
+      --muted: #77796e;
+      --line: #e5e0d4;
+      --accent: #d94f59;
+      --accent-dark: #ae3543;
+      --green: #58745a;
+      --butter: #f4d984;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image: radial-gradient(#d7d1c4 0.7px, transparent 0.7px);
+      background-size: 18px 18px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    button, input, textarea { font: inherit; }
+    button { color: inherit; }
+    .page { width: min(100% - 36px, 900px); margin: 0 auto; padding: 22px 0 44px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 34px; }
+    .brand { display: flex; gap: 10px; align-items: center; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #d9cfc1; border-radius: 50%; color: var(--accent); font-size: 17px; }
+    .top-note { color: var(--muted); font-size: 12px; }
+    main { min-height: 560px; }
+    .screen { display: none; animation: appear 420ms ease both; }
+    .screen.active { display: block; }
+    @keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height: 470px;
+      background: var(--card);
+      border: 1px solid rgba(40, 43, 36, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(59, 55, 42, 0.08);
+    }
+    .intro-copy { align-self: center; padding: clamp(28px, 6vw, 62px); }
+    .eyebrow { color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 500; }
+    h1 { max-width: 460px; margin: 16px 0 14px; font-size: clamp(40px, 6vw, 65px); line-height: 1.04; }
+    h1 em { color: var(--accent); font-weight: 500; }
+    .intro-copy > p { max-width: 370px; margin-bottom: 26px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .personalize { display: grid; gap: 13px; max-width: 360px; margin-bottom: 22px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+    .field input { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 8px 0; color: var(--ink); outline: none; }
+    .field input:focus { border-color: var(--accent); }
+    .intro-photo { min-height: 360px; background: #d6dfd0; position: relative; }
+    .intro-photo img { position: absolute; width: 100%; height: 100%; inset: 0; object-fit: cover; }
+    .photo-caption { position: absolute; right: 18px; bottom: 18px; padding: 9px 13px; border-radius: 3px; background: var(--card); color: var(--green); font-family: 'Playfair Display', serif; font-size: 15px; font-style: italic; }
+    .primary-button { display: inline-flex; justify-content: center; align-items: center; gap: 12px; min-height: 50px; padding: 0 20px; border: 0; border-radius: 4px; background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: background 160ms ease, transform 160ms ease; }
+    .primary-button:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .primary-button:focus-visible, .answer:focus-visible, .back-button:focus-visible, .text-button:focus-visible { outline: 3px solid #e5b93d; outline-offset: 3px; }
+
+    .quiz-wrap { max-width: 700px; margin: 26px auto 0; }
+    .quiz-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .progress-track { height: 5px; overflow: hidden; border-radius: 8px; background: #dedacd; }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: var(--accent); transition: width 300ms ease; }
+    .question-nav { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; max-width: 360px; margin: 14px auto 0; }
+    .question-nav-button { display: grid; place-items: center; width: 100%; max-width: 34px; aspect-ratio: 1; justify-self: center; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; }
+    .question-nav-button.answered:not(.current) { border-color: var(--green); color: var(--green); }
+    .question-nav-button.current { border-color: var(--accent); background: var(--accent); color: white; }
+    .question-nav-button:focus-visible { outline: 3px solid #e5b93d; outline-offset: 2px; }
+    .question-card { margin-top: 26px; padding: clamp(24px, 6vw, 52px); border: 1px solid rgba(40, 43, 36, 0.08); border-radius: 10px; background: var(--card); box-shadow: 0 16px 48px rgba(59, 55, 42, 0.07); }
+    .question-card h2 { margin: 12px 0 25px; font-size: clamp(27px, 4.5vw, 40px); line-height: 1.16; }
+    .answers { display: grid; gap: 10px; }
+    .answer { display: flex; align-items: center; gap: 13px; min-height: 56px; width: 100%; padding: 12px 15px; border: 1px solid var(--line); border-radius: 5px; background: transparent; text-align: left; cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
+    .answer:hover { transform: translateX(3px); border-color: #c6b9a6; }
+    .answer.selected { border-color: var(--accent); background: #fbefeb; }
+    .answer-letter { display: grid; flex: 0 0 27px; place-items: center; width: 27px; height: 27px; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .answer.selected .answer-letter { border-color: var(--accent); background: var(--accent); color: white; }
+    .answer-image { flex: 0 0 72px; width: 72px; height: 54px; border-radius: 3px; object-fit: cover; }
+    .custom-answer-field { display: grid; gap: 8px; margin-top: 4px; color: var(--muted); font-size: 13px; }
+    .custom-answer-field textarea { width: 100%; min-height: 96px; padding: 12px; border: 1px solid var(--line); border-radius: 5px; background: white; color: var(--ink); resize: vertical; }
+    .custom-answer-field textarea:focus-visible { outline: 3px solid #e5b93d; outline-offset: 2px; }
+    .question-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 24px; }
+    .text-button, .back-button { padding: 10px 0; border: 0; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; }
+    .text-button:disabled { opacity: 0.35; cursor: default; }
+    .question-actions .primary-button { min-width: 142px; }
+    .question-actions .primary-button:disabled { background: #c6c1b5; cursor: not-allowed; transform: none; }
+
+    .result-card { position: relative; max-width: 700px; margin: 46px auto 0; padding: clamp(30px, 7vw, 66px); overflow: hidden; border: 1px solid rgba(40, 43, 36, 0.08); border-radius: 10px; background: var(--card); text-align: center; box-shadow: 0 16px 48px rgba(59, 55, 42, 0.08); }
+    .result-card::before, .result-card::after { position: absolute; color: #efdfbd; font-family: 'Playfair Display', serif; font-size: 130px; line-height: 1; }
+    .result-card::before { content: '“'; top: 8px; left: 16px; }
+    .result-card::after { content: '”'; right: 16px; bottom: -30px; }
+    .result-heart { display: grid; place-items: center; width: 56px; height: 56px; margin: 0 auto 20px; border-radius: 50%; background: #f9e6df; color: var(--accent); font-size: 25px; }
+    .result-card h2 { margin: 12px auto; font-size: clamp(34px, 6vw, 52px); line-height: 1.08; }
+    .result-description { max-width: 450px; margin: 0 auto 26px; color: var(--muted); font-size: 15px; line-height: 1.75; }
+    .custom-answer-result { padding: 14px; border-left: 2px solid var(--accent); background: #fbefeb; text-align: left; white-space: pre-line; }
+    .love-note { max-width: 440px; margin: 0 auto 26px; padding: 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: 'Playfair Display', serif; font-size: 19px; font-style: italic; line-height: 1.5; }
+    .result-actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; }
+    footer { margin-top: 30px; color: var(--muted); text-align: center; font-size: 11px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 650px) {
+      .page { width: min(100% - 24px, 500px); padding-top: 14px; }
+      .topbar { margin-bottom: 20px; }
+      .top-note { font-size: 10px; }
+      .intro { grid-template-columns: 1fr; }
+      .intro-copy { padding: 30px 24px 26px; }
+      .intro-photo { min-height: 220px; grid-row: 1; }
+      h1 { font-size: 46px; }
+      .quiz-wrap { margin-top: 12px; }
+      .question-card { margin-top: 20px; padding: 25px 20px; }
+      .question-actions .primary-button { min-width: 126px; padding: 0 14px; }
+      .result-card { margin-top: 20px; padding: 38px 24px; }
+      .result-card::before, .result-card::after { font-size: 86px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">♥</span><span>Маленький тест о нас</span></div>
+      <span class="top-note">сделано с нежностью</span>
+    </header>
+
+    <main>
+      <section class="screen active" id="quizScreen" aria-labelledby="questionTitle" aria-live="polite">
+        <div class="quiz-wrap">
+          <div class="quiz-top"><span id="questionCounter">Вопрос 1 из 13</span><span id="progressPercent">8%</span></div>
+          <div class="progress-track" role="progressbar" aria-label="Прогресс теста" aria-valuemin="1" aria-valuemax="13" aria-valuenow="1"><div class="progress-fill" id="progressFill"></div></div>
+          <nav class="question-nav" id="questionNav" aria-label="Перейти к вопросу"></nav>
+          <div class="question-card">
+            <span class="eyebrow" id="questionEyebrow">Свидание мечты</span>
+            <h2 id="questionTitle"></h2>
+            <div class="answers" id="answers" role="group" aria-labelledby="questionTitle"></div>
+            <div class="question-actions">
+              <button class="back-button" id="backButton" type="button">← Назад</button>
+              <button class="primary-button" id="nextButton" type="button" disabled>Дальше <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="resultScreen" aria-labelledby="resultTitle" aria-live="polite">
+        <div class="result-card">
+          <div class="result-heart" aria-hidden="true">♥</div>
+          <span class="eyebrow">твой рецепт идеального вечера</span>
+          <h2 id="resultTitle"></h2>
+          <p class="result-description" id="resultDescription"></p>
+          <p class="result-description custom-answer-result" id="customAnswerDisplay" hidden></p>
+          <p class="love-note" id="loveNote"></p>
+          <div class="result-actions">
+            <button class="primary-button" id="restartButton" type="button">Пройти ещё раз <span aria-hidden="true">↻</span></button>
+            <button class="text-button" id="shareButton" type="button">Скопировать результат</button>
+          </div>
+          <p class="sr-only" id="copyStatus" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+    <footer>маленькое напоминание: ты — моё любимое место</footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        prompt: 'Какое свидание ты бы хотела провести со мной?',
+        answers: [
+          { text: 'Гулять в парке с кофе и разговаривать обо всём', type: 'home' },
+          { text: 'Поужинать в уютном месте при свечах', type: 'romance' },
+          { text: 'Сходить в кино, а потом долго гулять', type: 'adventure' },
+          { text: 'Устроить пикник и встретить вместе закат', type: 'surprise' },
+          { text: 'Погулять в тихом безлюдном месте, где нет суеты', type: 'home' }
+        ]
+      },
+      {
+        prompt: 'Куда бы ты хотела сходить со мной, где мы ещё ни разу не были?',
+        answers: [
+          { text: 'В уютное кафе, которое давно хотели попробовать', type: 'romance' },
+          { text: 'В другой город на маленькое путешествие', type: 'adventure' },
+          { text: 'В красивое место на природе, к озеру или в лес', type: 'home' },
+          { text: 'На концерт, выставку или другое новое событие', type: 'surprise' },
+          { text: 'В одно из мест, которые ты мне скидывала в группу', type: 'adventure' }
+        ]
+      },
+      {
+        prompt: 'Чего тебе сейчас больше всего хочется в наших отношениях?',
+        answers: [
+          { text: 'Чтобы мы чаще говорили откровенно и поддерживали друг друга', type: 'romance' },
+          { text: 'Чтобы у нас было больше времени только для нас двоих', type: 'home' },
+          { text: 'Чтобы ты брал на себя ответственность за наши общие дела и проблемы', type: 'home' },
+          { text: 'Чтобы мы чаще вместе пробовали что-то новое', type: 'adventure' }
+        ]
+      },
+      {
+        prompt: 'Как бы ты хотела, чтобы я чаще проявлял к тебе любовь?',
+        answers: [
+          { text: 'Чаще говорить тёплые слова и напоминать, как сильно любишь', type: 'romance' },
+          { text: 'Обнимать, целовать и быть нежным со мной', type: 'romance' },
+          { text: 'Заботиться поступками, помогать с делами и проблемами', type: 'home' },
+          { text: 'Чаще устраивать свидания и проводить время только вдвоём', type: 'adventure' }
+        ]
+      },
+      {
+        prompt: 'Что бы ты хотела изменить в наших отношениях к лучшему?',
+        answers: [
+          { text: 'Чаще спокойно говорить друг с другом о том, что нас волнует', type: 'romance' },
+          { text: 'Проводить больше времени вдвоём, не отвлекаясь на телефоны', type: 'home' },
+          { text: 'Лучше слышать и поддерживать друг друга в сложные моменты', type: 'home' },
+          { text: 'Чаще вместе придумывать планы и пробовать новое', type: 'adventure' },
+          { text: 'Написать свой ответ', type: 'romance', custom: true }
+        ]
+      },
+      {
+        prompt: 'Чего тебе не хватает от меня, но ты стесняешься попросить?',
+        answers: [
+          { text: 'Больше объятий, нежности и внимания', type: 'romance' },
+          { text: 'Чаще слышать от тебя тёплые слова и комплименты', type: 'romance' },
+          { text: 'Чтобы ты сам замечал, когда мне нужна помощь или поддержка', type: 'home' },
+          { text: 'Больше инициативы: чтобы ты сам предлагал, чем заняться вместе', type: 'adventure' }
+        ]
+      },
+      {
+        prompt: 'Какой отдых тебе больше всего хочется после тяжёлого дня?',
+        answers: [
+          { text: 'Тихий вечер дома, плед, чай и любимый фильм', type: 'home' },
+          { text: 'Обняться и спокойно поговорить обо всём', type: 'romance' },
+          { text: 'Прогуляться в тишине и подышать свежим воздухом', type: 'adventure' },
+          { text: 'Чтобы я обо всём позаботился, а ты просто отдыхала', type: 'surprise' },
+          { text: 'Написать свой ответ', type: 'home', custom: true }
+        ]
+      },
+      {
+        prompt: 'Что бы ты хотела добавить в нашу близость, чтобы нам обоим было ещё комфортнее и приятнее?',
+        answers: [
+          { text: 'Больше нежности, объятий и неспешности', type: 'romance' },
+          { text: 'Больше открытых разговоров о том, что нам нравится', type: 'home' },
+          { text: 'Больше спонтанности и новых впечатлений', type: 'adventure' },
+          { text: 'Больше времени наедине, без спешки и отвлечений', type: 'surprise' }
+        ]
+      },
+      {
+        prompt: 'Какие прикосновения тебе нравятся больше всего?',
+        answers: [
+          { text: 'Нежные прикосновения к волосам', type: 'romance' },
+          { text: 'Лёгкие прикосновения к лицу и поцелуи в щёку', type: 'romance' },
+          { text: 'Нежные прикосновения к шее и плечам', type: 'surprise' },
+          { text: 'Держаться за руки и переплетать пальцы', type: 'adventure' },
+          { text: 'Поглаживания по спине', type: 'home' },
+          { text: 'Объятия за талию', type: 'romance' },
+          { text: 'Долгие объятия или объятия со спины', type: 'home' },
+          { text: 'Поцелуй в лоб', type: 'romance' },
+          { text: 'Нежные прикосновения к ладоням', type: 'home' },
+          { text: 'Массаж плеч после долгого дня', type: 'surprise' },
+          { text: 'Прикосновения к груди', type: 'adventure', image: 'https://static.tildacdn.com/tild3265-3531-4238-a161-316138613235/ChatGPT_Image_22__20.webp' },
+          { text: 'Прикосновения к ягодицам', type: 'adventure', image: 'https://img.magnific.com/premium-photo/close-up-fit-sporty-female-underwear-beautiful-healthy-woman-posing-beige-background-sport-fitness-diet-weight-loss-healthcare-concept_341052-4108.jpg?semt=ais_hybrid&w=740&q=80' },
+          { text: 'Прикосновения к соскам', type: 'adventure', image: 'https://piercify.by/wp-content/uploads/2020/12/nipples2-300x300.jpg' }
+        ]
+      },
+      {
+        prompt: 'Что во мне кажется тебе самым сексуальным?',
+        answers: [
+          { text: 'Твои глаза', type: 'romance' },
+          { text: 'Твои губы', type: 'adventure' },
+          { text: 'Твои руки', type: 'surprise' },
+          { text: 'Твои плечи', type: 'home' },
+          { text: 'Твой бицепс', type: 'adventure' },
+          { text: 'Член', type: 'adventure', image: 'https://droch.pro/media/40/ad9ec2a1dc2e3a30.webp' },
+        { text: 'Ягодицы', type: 'adventure', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuV9o-1VwLWu6jrIer-PcQ-JYA7XZ0HIBOApN57yjtig&s=10' },
+        ]
+      },
+      {
+        prompt: 'Что мне нужно сделать чтобы ты возбудилась?',
+        answers: [
+         { text: 'ролевые игры разные личности ', type: 'adventure' },
+        { text: ' полное подчинение мужчине  и без прикасловное выполение его указаний  ', type: 'adventure' },
+        { text: 'пахабные слова втот момен когда все идет к сексу ', type: 'adventure' },
+        { text: 'неожиданно подойти и взять за волосы ', type: 'home' },
+          { text: 'приобнять за талию ', type: 'romance' },
+          { text: 'или начать приставать чтобы ты сопративлялась тебя это возбуждает хоть ты и оталкиваешь  ', type: 'adventure' },
+          { text: 'подчинится твоей воле ', type: 'surprise' },
+          { text: 'позволить доминировать на до мной ', type: 'home', custom: true }
+        ]
+      },
+      {
+        prompt: 'Что бы хотела попробывать в сексе но стеснялась спросить ?',
+        answers: [
+          { text: 'страпон', type: 'romance' },
+          { text: 'секс в людном месте ', type: 'home' },
+          { text: 'доминацыя над партнером ', type: 'surprise' },
+          { text: 'мжм или жмж', type: 'adventure' },
+          { text: 'связывания ', type: 'romance', custom: true },
+          { text: 'шлепки стимуляцыя болью', type: 'adventure' },
+          { text: 'заставить своего партнера ходить на четверенках прислуживать ', type: 'adventure' },
+          { text: 'самой прислуживать ходить на четверенках ', type: 'adventure' },
+          { text: 'напиши свой ответ', type: 'romance', custom: true },
+        ]
+      },
+      {
+        prompt: 'Какие у тебя фетиши ?',
+        answers: [
+          { text: 'секс в обшественых места ', type: 'home', custom: true },
+          { text: 'фут-фетиш', type: 'romance', custom: true },
+          { text: 'ароматы ', type: 'romance', custom: true },
+          { text: 'белье и чулки ', type: 'romance', custom: true },
+          { text: 'спецформа', type: 'romance', custom: true },
+          { text: 'БДСМ подчинение ', type: 'romance', custom: true },
+          { text: 'БДСМ властвование  ', type: 'romance', custom: true },
+        ]
+      }
+
+    ];
+
+    const results = {
+      home: {
+        title: 'Уют вдвоём',
+        description: 'Твой идеальный вечер — это тишина, любимая еда и чувство, что рядом именно тот человек. План уже почти готов: плед, вкусный ужин и никаких планов на расставание.',
+        note: 'С тобой даже обычный вечер становится моим любимым.'
+      },
+      adventure: {
+        title: 'Маленькое приключение',
+        description: 'Тебе нужны новые места, лёгкая спонтанность и впечатления, которые останутся только нашими. Берём тебя за руку — и отправляемся туда, где ещё не были.',
+        note: 'С тобой я готов заблудиться где угодно.'
+      },
+      romance: {
+        title: 'Киношная романтика',
+        description: 'Красивые детали, долгие взгляды и немного волшебства — вот твоё. Для тебя уже приготовлены любимое место, хороший повод нарядиться и слова, которые давно хотелось сказать.',
+        note: 'В моей любимой истории главная роль всегда твоя.'
+      },
+      surprise: {
+        title: 'Сюрприз от сердца',
+        description: 'Тебе нравится не знать, что будет дальше, и чувствовать, что о тебе подумали заранее. Тогда просто доверься мне: этот вечер я придумал с особенной нежностью.',
+        note: 'Самый красивый мой план — снова тебя удивить.'
+      }
+    };
+
+    const screens = [...document.querySelectorAll('.screen')];
+    const questionTitle = document.getElementById('questionTitle');
+    const answersElement = document.getElementById('answers');
+    const nextButton = document.getElementById('nextButton');
+    const backButton = document.getElementById('backButton');
+    const progressTrack = document.querySelector('.progress-track');
+    const questionNav = document.getElementById('questionNav');
+    const answers = Array(questions.length).fill(null);
+    const customResponses = Array(questions.length).fill('');
+    let currentQuestion = 0;
+    let signature = 'Твой человек';
+
+    function showScreen(screenId) {
+      screens.forEach((screen) => screen.classList.toggle('active', screen.id === screenId));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderQuestion() {
+      const question = questions[currentQuestion];
+      const progress = Math.round(((currentQuestion + 1) / questions.length) * 100);
+      document.getElementById('questionCounter').textContent = `Вопрос ${currentQuestion + 1} из ${questions.length}`;
+      document.getElementById('progressPercent').textContent = `${progress}%`;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+      progressTrack.setAttribute('aria-valuemax', String(questions.length));
+      progressTrack.setAttribute('aria-valuenow', String(currentQuestion + 1));
+      questionNav.replaceChildren();
+      questions.forEach((_, index) => {
+        const navButton = document.createElement('button');
+        navButton.type = 'button';
+        navButton.className = `question-nav-button${answers[index] !== null ? ' answered' : ''}${index === currentQuestion ? ' current' : ''}`;
+        navButton.textContent = String(index + 1);
+        navButton.setAttribute('aria-label', `Вопрос ${index + 1}${answers[index] !== null ? ', отвечен' : ''}`);
+        if (index === currentQuestion) navButton.setAttribute('aria-current', 'step');
+        navButton.addEventListener('click', () => {
+          currentQuestion = index;
+          renderQuestion();
+          questionNav.children[index].focus();
+        });
+        questionNav.append(navButton);
+      });
+      questionTitle.textContent = question.prompt;
+      answersElement.replaceChildren();
+
+      question.answers.forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `answer${answers[currentQuestion] === index ? ' selected' : ''}`;
+        button.setAttribute('aria-pressed', String(answers[currentQuestion] === index));
+        const letter = document.createElement('span');
+        letter.className = 'answer-letter';
+        letter.setAttribute('aria-hidden', 'true');
+        letter.textContent = String.fromCharCode(65 + index);
+        const text = document.createElement('span');
+        text.textContent = answer.text;
+        if (answer.image) {
+          const image = document.createElement('img');
+          image.className = 'answer-image';
+          image.src = answer.image;
+          image.alt = '';
+          button.append(letter, image, text);
+        } else {
+          button.append(letter, text);
+        }
+        button.addEventListener('click', () => {
+          answers[currentQuestion] = index;
+          renderQuestion();
+        });
+        answersElement.append(button);
+      });
+
+      const selectedAnswer = question.answers[answers[currentQuestion]];
+      if (selectedAnswer?.custom) {
+        const field = document.createElement('label');
+        field.className = 'custom-answer-field';
+        field.append(document.createTextNode('Напиши свой ответ'));
+        const textarea = document.createElement('textarea');
+        textarea.rows = 3;
+        textarea.maxLength = 500;
+        textarea.placeholder = 'Твой ответ…';
+        textarea.value = customResponses[currentQuestion];
+        textarea.addEventListener('input', () => {
+          customResponses[currentQuestion] = textarea.value;
+          nextButton.disabled = !textarea.value.trim();
+        });
+        field.append(textarea);
+        answersElement.append(field);
+        textarea.focus();
+      }
+
+      backButton.disabled = currentQuestion === 0;
+      nextButton.disabled = answers[currentQuestion] === null || (selectedAnswer?.custom && !customResponses[currentQuestion].trim());
+      nextButton.innerHTML = currentQuestion === questions.length - 1 ? 'Узнать результат <span aria-hidden="true">→</span>' : 'Дальше <span aria-hidden="true">→</span>';
+    }
+
+    function getCustomResponseText() {
+      return customResponses.flatMap((response, index) => {
+        const selectedAnswer = questions[index].answers[answers[index]];
+        const trimmedResponse = response.trim();
+        return selectedAnswer?.custom && trimmedResponse ? [`Ответ на вопрос ${index + 1}: ${trimmedResponse}`] : [];
+      }).join('\n');
+    }
+
+    function showResult() {
+      const totals = { home: 0, adventure: 0, romance: 0, surprise: 0 };
+      answers.forEach((answerIndex, questionIndex) => {
+        totals[questions[questionIndex].answers[answerIndex].type] += 1;
+      });
+      const winningType = Object.keys(totals).reduce((winner, type) => totals[type] > totals[winner] ? type : winner, 'home');
+      const result = results[winningType];
+      document.getElementById('resultTitle').textContent = result.title;
+      document.getElementById('resultDescription').textContent = result.description;
+      const customAnswerDisplay = document.getElementById('customAnswerDisplay');
+      const customResponseText = getCustomResponseText();
+      customAnswerDisplay.hidden = !customResponseText;
+      customAnswerDisplay.textContent = customResponseText;
+      document.getElementById('loveNote').textContent = `«${result.note}» ${signature}`;
+      showScreen('resultScreen');
+    }
+
+    backButton.addEventListener('click', () => {
+      if (currentQuestion === 0) return;
+      currentQuestion -= 1;
+      renderQuestion();
+    });
+
+    nextButton.addEventListener('click', () => {
+      if (answers[currentQuestion] === null) return;
+      if (currentQuestion === questions.length - 1) {
+        showResult();
+        return;
+      }
+      currentQuestion += 1;
+      renderQuestion();
+    });
+
+    document.getElementById('restartButton').addEventListener('click', () => {
+      answers.fill(null);
+      customResponses.fill('');
+      currentQuestion = 0;
+      renderQuestion();
+      showScreen('quizScreen');
+    });
+
+    document.getElementById('shareButton').addEventListener('click', async (event) => {
+      const customResponseText = getCustomResponseText();
+      const sharedAnswer = customResponseText ? `${customResponseText}\n` : '';
+      const shareText = `${document.getElementById('resultTitle').textContent}\n${sharedAnswer}${document.getElementById('loveNote').textContent}`;
+      const status = document.getElementById('copyStatus');
+      try {
+        await navigator.clipboard.writeText(shareText);
+        event.currentTarget.textContent = 'Скопировано ♥';
+        status.textContent = 'Результат скопирован.';
+      } catch {
+        status.textContent = 'Не удалось скопировать. Можно выделить текст результата вручную.';
+      }
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>

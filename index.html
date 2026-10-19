@@ -1,0 +1,3251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ESSENS — Парфюмерная лавка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #E1D7CC;
+    --paper-raised: #EAE2D9;
+    --ink: #261D19;
+    --ink-soft: #5A514B;
+    --rule: rgba(38, 29, 25, 0.16);
+    --wine: #5D2A36;
+    --wine-deep: #49212B;
+    --brass: #8B7043;
+    --sage: #586750;
+    --powder: #8A5D68;
+    --out-of-stock: #AFA297;
+    color-scheme: light;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #1C1712;
+      --paper-raised: #241E17;
+      --ink: #F1E9DD;
+      --ink-soft: #B8AA98;
+      --rule: rgba(241, 233, 221, 0.14);
+      --wine: #C97C8E;
+      --wine-deep: #A85F72;
+      --brass: #D3B36B;
+      --sage: #93A67F;
+      --powder: #D189A0;
+      --out-of-stock: #6B6259;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1C1712;
+    --paper-raised: #241E17;
+    --ink: #F1E9DD;
+    --ink-soft: #B8AA98;
+    --rule: rgba(241, 233, 221, 0.14);
+    --wine: #C97C8E;
+    --wine-deep: #A85F72;
+    --brass: #D3B36B;
+    --sage: #93A67F;
+    --powder: #D189A0;
+    --out-of-stock: #6B6259;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Work Sans', -apple-system, sans-serif;
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    overflow-x: hidden;
+  }
+
+  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 22px 20px 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 5;
+  }
+  header .wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0;
+  }
+  header .tagline {
+    margin: 4px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.03em;
+  }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs {
+    display: flex;
+    gap: 22px;
+    padding: 14px 20px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  nav.tabs button {
+    background: none;
+    border: none;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    padding: 0 0 12px;
+    white-space: nowrap;
+    position: relative;
+    cursor: pointer;
+  }
+  nav.tabs button.active { color: var(--ink); }
+  nav.tabs button.active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: var(--accent, var(--wine));
+  }
+
+  .filter-wrap {
+    padding: 16px 20px 0;
+  }
+  .filter-panel {
+    background: rgba(88, 76, 68, 0.08);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 16px 16px 12px;
+  }
+  .filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .filter-header span {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .filter-reset {
+    background: none;
+    border: none;
+    color: var(--wine);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+  }
+  .range-values {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .range-values strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .dual-range {
+    position: relative;
+    height: 28px;
+    display: flex;
+    align-items: center;
+  }
+  .range-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    background: rgba(43, 33, 27, 0.16);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .range-highlight {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    background: rgba(93, 42, 54, 0.5);
+    border-radius: 999px;
+    transition: left 0.18s ease, width 0.18s ease;
+    box-shadow: 0 0 0 1px rgba(93, 42, 54, 0.12);
+    z-index: 1;
+  }
+  .dual-range input[type="range"] {
+    position: absolute;
+    inset: 0 0 auto 0;
+    width: 100%;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 3px;
+    margin: 0;
+    z-index: 2;
+  }
+  .dual-range input[type="range"]::-webkit-slider-runnable-track {
+    height: 3px;
+    background: transparent;
+  }
+  .dual-range input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--paper-raised);
+    border: 2px solid var(--wine);
+    pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+    cursor: pointer;
+    margin-top: 5px;
+  }
+  .dual-range input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--paper-raised);
+    border: 2px solid var(--wine);
+    pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+    cursor: pointer;
+  }
+  .sort-panel {
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px 0;
+  }
+  .sort-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .sort-btn.active {
+    background: rgba(93, 42, 54, 0.2);
+    border-color: rgba(93, 42, 54, 0.35);
+    color: var(--ink);
+  }
+
+  .view-panel {
+    display: flex;
+    gap: 8px;
+    padding: 12px 20px 0;
+  }
+  .view-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .view-btn.active {
+    background: rgba(93, 42, 54, 0.16);
+    border-color: rgba(93, 42, 54, 0.35);
+    color: var(--ink);
+  }
+
+  .empty-state {
+    padding: 30px 18px 12px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  /* ---------- Product list ---------- */
+  main { padding: 6px 20px 110px; }
+
+  main[data-view="scroll"] {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 12px 20px 90px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  main[data-view="scroll"]::-webkit-scrollbar { display: none; }
+  main[data-view="scroll"] .product {
+    min-width: 220px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 12px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    background: var(--card-bg, rgba(255,255,255,0.03));
+    border-color: var(--card-border, var(--rule));
+    box-shadow: 0 8px 18px rgba(32, 20, 14, 0.1);
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+  main[data-view="scroll"] .product-thumb,
+  main[data-view="scroll"] .flacon {
+    width: 100%;
+    height: 180px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  main[data-view="scroll"] .product .price {
+    text-align: left;
+    width: 100%;
+  }
+  main[data-view="scroll"] .product > div:nth-child(2) {
+    width: 100%;
+  }
+
+  main[data-view="grid"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding-top: 12px;
+  }
+  main[data-view="grid"] .product {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42%;
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 6px 7px;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    background: var(--card-bg, rgba(255,255,255,0.03));
+    border-color: var(--card-border, var(--rule));
+    box-shadow: 0 6px 14px rgba(32, 20, 14, 0.1);
+    overflow: hidden;
+    min-height: 311px;
+  }
+  main[data-view="grid"] .product-thumb,
+  main[data-view="grid"] .flacon {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 100%;
+    height: 241px;
+    border-radius: 18px;
+    overflow: hidden;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  main[data-view="grid"] .product-thumb img {
+    object-fit: contain;
+    padding: 3px;
+  }
+  main[data-view="grid"] .product > div:nth-child(2) {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+  }
+  main[data-view="grid"] .product .name {
+    font-size: 16px;
+  }
+  main[data-view="grid"] .product .brand {
+    font-size: 10px;
+  }
+  main[data-view="grid"] .product .price {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 14px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .product {
+    display: grid;
+    grid-template-columns: 46px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: transform 0.16s ease;
+  }
+  .product:hover {
+    box-shadow: 0 10px 22px rgba(32, 20, 14, 0.16);
+    transform: scale(0.98);
+  }
+  .product:active { opacity: 0.7; }
+  .product.blue-talisman:hover {
+    background: #6f9fbd;
+    border-color: #a9c9dc;
+    box-shadow: 0 8px 20px rgba(65, 111, 139, 0.2);
+  }
+  .product.blue-talisman:hover .brand,
+  .product.blue-talisman:hover .name,
+  .product.blue-talisman:hover .volume {
+    color: #f2f8ff;
+  }
+  .product.blue-talisman:hover .status {
+    color: #b8e1ff;
+  }
+  .product.blue-talisman:hover .price {
+    color: #d8efff;
+  }
+  .product.bitter-peach:hover {
+    background: #e8a15f;
+    border-color: #bd6b2f;
+    box-shadow: 0 8px 20px rgba(176, 91, 30, 0.24);
+  }
+  .product.bitter-peach:hover .brand,
+  .product.bitter-peach:hover .name,
+  .product.bitter-peach:hover .volume {
+    color: #382016;
+  }
+  .product.bitter-peach:hover .status {
+    color: #5b351e;
+  }
+  .product.bitter-peach:hover .price {
+    color: #4c2917;
+  }
+
+  .product-thumb {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(58, 46, 40, 0.1);
+    border: 1px solid rgba(38, 29, 25, 0.12);
+    flex-shrink: 0;
+  }
+  .product-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .flacon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+  }
+
+  .product .brand {
+    display: block;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin: 0 0 2px;
+  }
+  .product .gender {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 2px 7px;
+    margin-top: 4px;
+  }
+  .product .name {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .product .status {
+    font-size: 11.5px;
+    margin-top: 3px;
+    color: var(--sage);
+  }
+  .product .volume {
+    font-size: 11.5px;
+    margin-top: 2px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .product.out .status { color: var(--out-of-stock); }
+  .product.out .name { color: var(--ink-soft); }
+
+  .product .price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--brass);
+    white-space: nowrap;
+    text-align: right;
+  }
+  .product.out .price { color: var(--out-of-stock); }
+
+  /* ---------- Bottom cart bar ---------- */
+  .cart-bar {
+    position: fixed;
+    left: auto;
+    right: 16px;
+    bottom: 16px;
+    width: min(158px, calc(100vw - 32px));
+    background: rgba(92, 81, 74, 0.9);
+    color: #f1e9e1;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 7px 9px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    box-shadow: 0 6px 14px rgba(31, 22, 17, 0.14);
+    backdrop-filter: blur(8px);
+    transform: translateY(140%);
+    transition: transform 0.25s ease;
+    cursor: pointer;
+    z-index: 20;
+  }
+  .cart-bar.visible { transform: translateY(0); }
+  .cart-bar .cart-icon {
+    width: 11px;
+    height: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    margin-left: 3px;
+    flex-shrink: 0;
+  }
+  .cart-bar .cart-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: rgba(241, 233, 225, 0.8);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .cart-bar .count {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f7efe9;
+    border-radius: 999px;
+    padding: 1px 6px;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+  #cartTotal {
+    display: block;
+    width: 100%;
+    text-align: left;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-size: 10.5px;
+    opacity: 0.95;
+  }
+
+  /* ---------- Sheets (product detail / cart) ---------- */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 30;
+  }
+  .overlay.visible { opacity: 1; pointer-events: auto; }
+
+  .sheet {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: rgba(94, 81, 72, 0.94);
+    border-radius: 20px 20px 0 0;
+    padding: 8px 22px calc(24px + env(safe-area-inset-bottom, 0));
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(.32,.72,0,1);
+    z-index: 31;
+    max-height: 82vh;
+    overflow-y: auto;
+  }
+  .sheet.visible { transform: translateY(0); }
+  .sheet .handle {
+    width: 36px; height: 4px;
+    background: var(--rule);
+    border-radius: 999px;
+    margin: 10px auto 18px;
+  }
+
+  /* product sheet */
+  #productSheet .p-brand {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 248, 242, 0.7);
+    margin: 0 0 4px;
+  }
+  #productSheet .p-gender {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 248, 242, 0.8);
+    border: 1px solid rgba(255, 248, 242, 0.22);
+    border-radius: 999px;
+    padding: 4px 8px;
+    margin: 0 0 8px;
+  }
+  #productSheet .p-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    line-height: 1.1;
+    color: #f3ece4;
+  }
+  #productSheet .p-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--brass);
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  #productSheet .p-note {
+    font-size: 11px;
+    line-height: 1.5;
+    color: rgba(243, 236, 228, 0.72);
+    margin: 0 0 14px;
+  }
+  #productSheet .p-status { font-size: 13px; color: #e3d9cf; margin: 0 0 6px; }
+  #productSheet .p-volume { font-size: 12px; color: rgba(243, 236, 228, 0.72); letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 18px; }
+  #productSheet .p-status.out { color: var(--out-of-stock); }
+  .season-mini {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .season-mini-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .season-mini-items {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .season-mini-items span {
+    font-size: 10px;
+    line-height: 1;
+    padding: 5px 7px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: rgba(93, 42, 54, 0.06);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .product-description {
+    margin: 0 0 20px;
+    color: rgba(243, 236, 228, 0.76);
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+  .product-description strong {
+    color: #f3ece4;
+    font-weight: 600;
+  }
+
+  .product-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 6px 0 10px;
+    min-height: 270px;
+  }
+  .product-gallery-wrap {
+    position: relative;
+    width: 100%;
+    perspective: 900px;
+  }
+  @keyframes gallery-turn-3d {
+    0% { transform: rotateY(0) scale(1); }
+    42% { transform: rotateY(-9deg) scale(0.98); }
+    70% { transform: rotateY(7deg) scale(0.99); }
+    100% { transform: rotateY(0) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .product-gallery.is-turning { animation: none; }
+  }
+  .product-gallery {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    width: 100%;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    transform-style: preserve-3d;
+  }
+  .product-gallery.is-turning { animation: gallery-turn-3d 1.1s ease-in-out; }
+  .product-gallery::-webkit-scrollbar { display: none; }
+  .gallery-slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    scroll-snap-align: start;
+  }
+  .gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(40, 31, 25, 0.18);
+    border-radius: 50%;
+    background: rgba(46, 35, 30, 0.72);
+    color: rgba(243, 233, 223, 0.96);
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    cursor: pointer;
+    z-index: 2;
+  }
+  .gallery-arrow.is-being-held {
+    animation: arrow-press 0.8s ease-in-out;
+  }
+  @keyframes arrow-press {
+    0%, 100% { transform: translateY(-50%) scale(1); }
+    40%, 70% { transform: translateY(-50%) scale(0.82) rotate(-8deg); }
+  }
+  .gallery-arrow.left { left: 8px; }
+  .gallery-arrow.right { right: 8px; }
+  .gallery-slide img {
+    display: block;
+    max-width: 100%;
+    max-height: 270px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    filter: drop-shadow(0 16px 18px rgba(60, 47, 40, 0.18));
+  }
+  .gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 8px 0 12px;
+  }
+  .gallery-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(43,33,27,0.2);
+  }
+  .gallery-dot.active {
+    background: var(--wine);
+  }
+  .mugler-bottle {
+    position: relative;
+    width: 220px;
+    height: 290px;
+    border-radius: 14px 14px 18px 18px;
+    background: linear-gradient(180deg, rgba(246,236,223,0.86), rgba(238,228,211,0.7) 16%, rgba(230,216,194,0.94) 18%, rgba(232,225,214,0.94) 100%);
+    border: 1px solid rgba(60,48,38,0.2);
+    box-shadow: inset 0 0 0 2px rgba(120,94,74,0.12), inset -18px 0 25px rgba(121,94,73,0.14), inset 18px 0 25px rgba(130,108,88,0.08), 0 16px 28px rgba(62,50,38,0.12);
+  }
+  .mugler-bottle::before {
+    content: "";
+    position: absolute;
+    left: 20px; right: 20px; top: 18px; bottom: 18px;
+    border-radius: 12px 12px 18px 18px;
+    background: linear-gradient(180deg, rgba(150,120,86,0.12), rgba(120,95,71,0.04));
+    border: 2px solid rgba(88,74,60,0.18);
+    box-shadow: inset 0 0 0 1px rgba(120,93,65,0.16);
+  }
+  .mugler-bottle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -34px;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 48px;
+    border-radius: 12px 12px 10px 10px;
+    background: linear-gradient(180deg, rgba(237,227,210,0.96), rgba(178,145,94,0.9));
+    border: 1px solid rgba(59,45,35,0.15);
+    box-shadow: inset 0 0 0 2px rgba(124,99,78,0.14);
+  }
+  .mugler-cap {
+    position: absolute;
+    left: 50%;
+    top: -66px;
+    transform: translateX(-50%);
+    width: 62px;
+    height: 70px;
+    border-radius: 10px 10px 8px 8px;
+    background: linear-gradient(180deg, rgba(236,224,198,0.95), rgba(194,160,92,0.82));
+    border: 1px solid rgba(73,55,32,0.3);
+    box-shadow: 0 10px 14px rgba(61,49,31,0.12);
+    z-index: 2;
+  }
+  .mugler-cap::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(21,17,13,0.8);
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+  }
+  .mugler-label {
+    position: absolute;
+    left: 50%;
+    top: 116px;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 34px;
+    letter-spacing: 0.08em;
+    color: rgba(29,25,20,0.9);
+    z-index: 3;
+  }
+  .mugler-brand {
+    position: absolute;
+    left: 50%;
+    bottom: 48px;
+    transform: translateX(-50%);
+    font-family: 'Work Sans', sans-serif;
+    letter-spacing: 0.28em;
+    font-size: 11px;
+    color: rgba(35,27,20,0.8);
+    text-transform: uppercase;
+    z-index: 3;
+  }
+  .product-visual img {
+    display: block;
+    max-width: 100%;
+    max-height: 270px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 18px rgba(60, 47, 40, 0.18));
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-primary { background: var(--wine); color: rgba(255, 255, 255, 0.96); }
+  .btn-primary:active { background: var(--wine-deep); }
+  .btn-disabled { background: var(--rule); color: var(--ink-soft); }
+
+  /* cart sheet */
+  #cartSheet h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+  .cart-row {
+    display: grid;
+    grid-template-columns: 42px 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cart-thumb {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(58, 46, 40, 0.1);
+    border: 1px solid var(--rule);
+  }
+  .cart-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .cart-row .ci-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .cart-row .ci-price { font-size: 12.5px; color: var(--ink-soft); }
+  .qty {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .qty button {
+    width: 26px; height: 26px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: none;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .qty span { font-size: 14px; min-width: 14px; text-align: center; }
+  .delivery-options {
+    display: grid;
+    gap: 10px;
+    margin: 6px 0 18px;
+  }
+  .delivery-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    background: rgba(40, 28, 20, 0.02);
+    padding: 12px 14px;
+    width: 100%;
+    cursor: pointer;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+  }
+  .delivery-option.active {
+    border-color: rgba(93, 42, 54, 0.45);
+    background: rgba(93, 42, 54, 0.08);
+  }
+  .delivery-option span {
+    flex: 1;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .delivery-option strong {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .cart-total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 16px 0 20px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .cart-total strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .cart-empty {
+    text-align: center;
+    padding: 40px 0 20px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="wordmark">ESSENS</p>
+  <p class="tagline">Парфюмерная лавка</p>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<div class="sort-panel" id="sortPanel">
+  <button type="button" class="sort-btn active" data-sort="desc">От большего</button>
+  <button type="button" class="sort-btn" data-sort="asc">От меньшего</button>
+</div>
+
+<div class="view-panel" id="viewPanel">
+  <button type="button" class="view-btn active" data-view="grid">Сетка</button>
+  <button type="button" class="view-btn" data-view="scroll">Листать</button>
+</div>
+
+<div class="filter-wrap">
+  <div class="filter-panel">
+    <div class="filter-header">
+      <span>Фильтр по цене</span>
+      <button type="button" class="filter-reset" id="resetPriceFilter">Сброс</button>
+    </div>
+    <div class="range-values">
+      <span>от <strong id="minPriceValue">0 Kč</strong></span>
+      <span>до <strong id="maxPriceValue">6000 Kč</strong></span>
+    </div>
+    <div class="dual-range">
+      <div class="range-track"></div>
+      <div class="range-highlight" id="priceRangeHighlight"></div>
+      <input id="minPriceRange" type="range" min="0" max="6000" step="50" value="0" aria-label="Минимальная цена">
+      <input id="maxPriceRange" type="range" min="0" max="6000" step="50" value="6000" aria-label="Максимальная цена">
+    </div>
+  </div>
+</div>
+
+<main id="productList"></main>
+
+<div class="cart-bar" id="cartBar">
+  <span>
+    <span>в корзине</span>
+    <span class="count" id="cartCount">0</span>
+    <span class="cart-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="9" cy="18" r="1.3"></circle>
+        <circle cx="17" cy="18" r="1.3"></circle>
+        <path d="M3 4h2l2.2 9.2a1 1 0 0 0 1 .8h8.7a1 1 0 0 0 1-.75L19 7H7"></path>
+      </svg>
+    </span>
+  </span>
+  <span id="cartTotal">0 Kč</span>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="sheet" id="productSheet">
+  <div class="handle"></div>
+  <div class="product-visual" id="productVisual"></div>
+  <p class="p-brand" id="pBrand"></p>
+  <span class="p-gender" id="pGender"></span>
+  <p class="p-name serif" id="pName"></p>
+  <p class="p-price serif" id="pPrice"></p>
+  <p class="p-note">Цена ниже, потому что это другой флакон — вы платите за запах, а не за бренд.</p>
+  <p class="p-status" id="pStatus"></p>
+  <p class="p-volume" id="pVolume">50 ml</p>
+  <div id="productDeliveryOptions" class="delivery-options"></div>
+  <div class="product-description" id="productDescription">
+    <div><strong>Верхние ноты:</strong> бергамот, апельсин, малина</div>
+    <div><strong>Ноты сердца:</strong> ветивер, магнолия, перец</div>
+    <div><strong>База:</strong> пачули, сандаловое дерево, амбра</div>
+    <div><strong>Тип аромата:</strong> цветочный, фруктовый</div>
+  </div>
+  <button class="btn btn-primary" id="pAddBtn">Добавить в корзину</button>
+</div>
+
+<div class="sheet" id="cartSheet">
+  <div class="handle"></div>
+  <h2>Ваша корзина</h2>
+  <div id="cartRows"></div>
+  <div id="cartFooter"></div>
+</div>
+
+<script>
+/* ====== Данные каталога (совпадают с ботом) ====== */
+const CATEGORY_ACCENT = { Women: 'var(--powder)', Luxury: 'var(--brass)', Men: 'var(--sage)' };
+const CATEGORY_LABEL = { Women: 'Women', Luxury: 'Luxury', Men: 'Men' };
+
+const FRAGRANCES = {
+  Luxury: [
+    { id: 1, name: "SANTAL 33", brand: "Le Labo", price: 2675, stock: true, code: "lux-01" },
+    { id: 2, name: "BAL D'AFRIQUE", brand: "Nishane", price: 2200, stock: false, code: "lux-02" },
+    { id: 3, name: "KIRKE", brand: "Nishane", price: 1495, stock: true, code: "lux-03" },
+    { id: 4, name: "FLEUR NARCOTIQUE", brand: "Nishane", price: 3500, stock: true, code: "lux-04" },
+    { id: 5, name: "SIRRAH", brand: "Maison", price: 1398.5, stock: true, code: "lux-05" },
+    { id: 6, name: "MÉTTALIQUE", brand: "Maison", price: 825, stock: true, code: "lux-06" },
+    { id: 42, name: "STARS LA CAPITALE", brand: "Maison", price: 1473, stock: true, code: "lux-07" },
+    { id: 43, name: "ANGELS SHARE", brand: "Maison", price: 1652.5, stock: true, code: "lux-08" },
+    { id: 44, name: "DELINA", brand: "Parfums de Marly", price: 1800, stock: true, code: "lux-09" },
+  ],
+  Men: [
+    { id: 7, name: "AVENTUS", brand: "Creed", price: 5879, stock: true, code: "m903" },
+    { id: 8, name: "SAUVAGE", brand: "Dior", price: 2200, stock: true, code: "m025" },
+    { id: 9, name: "BLEU DE CHANEL", brand: "Chanel", price: 2200, stock: true, code: "m015" },
+    { id: 10, name: "TOBACCO OUD", brand: "Maison", price: 1445, stock: true, code: "m809" },
+    { id: 14, name: "ERBA PURA", brand: "Maison", price: 1225, stock: true, code: "m905" },
+    { id: 15, name: "GUMIN", brand: "Maison", price: 1190, stock: true, code: "m904" },
+    { id: 16, name: "FIERCE", brand: "Abercrombie & Fitch", price: 970, stock: true, code: "m902" },
+    { id: 17, name: "BOIS D'ARGENT", brand: "Atelier", price: 1325, stock: true, code: "m050" },
+    { id: 18, name: "PLAY SPORT", brand: "Play", price: 890, stock: true, code: "m049" },
+    { id: 19, name: "MYSLF", brand: "Maison", price: 1065, stock: true, code: "m048" },
+    { id: 20, name: "WOOD SAGE & SEA SALT", brand: "Jo Malone London", price: 1360, stock: true, code: "m047" },
+    { id: 21, name: "EROS", brand: "Versace", price: 1490, stock: true, code: "m046" },
+    { id: 22, name: "PHANTOM", brand: "Paco Rabanne", price: 1280, stock: true, code: "m045" },
+    { id: 23, name: "GENTLEMAN", brand: "Givenchy", price: 1430, stock: true, code: "m043" },
+    { id: 24, name: "THE ONE FOR MEN", brand: "Dolce & Gabbana", price: 1560, stock: true, code: "m042" },
+    { id: 25, name: "BAD BOY", brand: "David Beckham", price: 950, stock: true, code: "m041" },
+    { id: 26, name: "ÉGOISTE PLATINUM", brand: "Chanel", price: 1670, stock: true, code: "m901" },
+    { id: 27, name: "Y FOR MEN", brand: "Yves Saint Laurent", price: 1240, stock: true, code: "m040" },
+    { id: 28, name: "EARL GREY & CUCUMBER", brand: "Jo Malone London", price: 1180, stock: true, code: "m038" },
+    { id: 29, name: "MAN WOOD ESSENCE", brand: "Maison", price: 1125, stock: true, code: "m036" },
+    { id: 30, name: "STRONGER WITH YOU", brand: "Emporio Armani", price: 1420, stock: true, code: "m034" },
+    { id: 31, name: "ALLURE HOMME SPORT", brand: "Chanel", price: 1305, stock: true, code: "m029" },
+    { id: 32, name: "L. 12. 12 WHITE BLANC", brand: "Maison", price: 1200, stock: true, code: "m028" },
+    { id: 33, name: "INVICTUS", brand: "Paco Rabanne", price: 1345, stock: true, code: "m024" },
+    { id: 34, name: "CODE", brand: "Giorgio Armani", price: 1560, stock: true, code: "m022" },
+    { id: 35, name: "LIGHT BLUE POUR HOMME", brand: "Dolce & Gabbana", price: 1370, stock: true, code: "m016" },
+    { id: 36, name: "MAN EAU FRAÎCHE", brand: "Hermès", price: 1275, stock: true, code: "m014" },
+    { id: 37, name: "SILVER MOUNTAIN WATER", brand: "Creed", price: 1745, stock: true, code: "m013" },
+    { id: 38, name: "1 MILLION", brand: "Paco Rabanne", price: 1395, stock: true, code: "m008" },
+    { id: 39, name: "BOSS BOTTLED", brand: "Hugo Boss", price: 1140, stock: true, code: "m007" },
+    { id: 40, name: "ACQUA DI GIÒ", brand: "Giorgio Armani", price: 1465, stock: true, code: "m003" },
+    { id: 41, name: "FAHRENHEIT", brand: "Christian Dior", price: 1505, stock: true, code: "m001" },
+  ],
+  Women: [
+    { id: 11, name: "COCO MADEMOISELLE", brand: "Chanel", price: 1750, stock: true, code: "w117", image: "https://media.douglas.cz/medias/stbDht103895-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wzNTQ1MnxpbWFnZS9qcGVnfGFHVTJMMmhsTnk4MU1URTBNRGd4TURjd01qZzNPQzl6ZEdKRWFIUXhNRE00T1RWZk1GOWtaMnd0UTFvdWFuQm58NGJjOTNhZjY5Yzg3ZTk3NzU5OTk0Mjc4OTdjYjVjYTU3NjhlZjY5OTYxZjI3ZDE2Y2U3ZTEyODY1NDk2MjRlMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/stbDht103895-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wzNTQ1MnxpbWFnZS9qcGVnfGFHVTJMMmhsTnk4MU1URTBNRGd4TURjd01qZzNPQzl6ZEdKRWFIUXhNRE00T1RWZk1GOWtaMnd0UTFvdWFuQm58NGJjOTNhZjY5Yzg3ZTk3NzU5OTk0Mjc4OTdjYjVjYTU3NjhlZjY5OTYxZjI3ZDE2Y2U3ZTEyODY1NDk2MjRlMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 12, name: "J'ADORE", brand: "Dior", price: 1200, stock: true, code: "w118", image: "https://media.douglas.cz/medias/GtDXqj1217956-0-global.jpg?context=bWFzdGVyfGltYWdlc3wxMDUzMDV8aW1hZ2UvanBlZ3xhR0kyTDJnNE5DODJNelU0TURJd01qVXpNamc1TkM5SGRFUlljV294TWpFM09UVTJYekJmWjJ4dlltRnNMbXB3Wnd8NjZkZWNkMmQyMjVjMTRkZTZhMmM3ZTllYzI3MzBkMWJmYmYxNTA2MjQyYjU1OTRjYTgxZjMzZGI4MTY2ZGIyZA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/GtDXqj1217956-0-global.jpg?context=bWFzdGVyfGltYWdlc3wxMDUzMDV8aW1hZ2UvanBlZ3xhR0kyTDJnNE5DODJNelU0TURJd01qVXpNamc1TkM5SGRFUlljV294TWpFM09UVTJYekJmWjJ4dlltRnNMbXB3Wnd8NjZkZWNkMmQyMjVjMTRkZTZhMmM3ZTllYzI3MzBkMWJmYmYxNTA2MjQyYjU1OTRjYTgxZjMzZGI4MTY2ZGIyZA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 13, name: "LADY MILLION", brand: "Paco Rabanne", price: 1175, stock: true, code: "w127", image: "https://media.douglas.cz/medias/zLlcsy1031083-0-global.jpg?context=bWFzdGVyfGltYWdlc3wyNDY5MTF8aW1hZ2UvanBlZ3xhR0k0TDJobE55ODJNell5TURjNU16UXpOREUwTWk5NlRHeGpjM2t4TURNeE1EZ3pYekJmWjJ4dlltRnNMbXB3Wnd8NTYwZmExMTA3NWE3Y2Q4MTkzODgwMDU1NWU3NzRlZTZkMDZlZTdjMDQxM2U5YTc2MjEwNjUwMTVjMzRhMjYwOQ&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/zLlcsy1031083-0-global.jpg?context=bWFzdGVyfGltYWdlc3wyNDY5MTF8aW1hZ2UvanBlZ3xhR0k0TDJobE55ODJNell5TURjNU16UXpOREUwTWk5NlRHeGpjM2t4TURNeE1EZ3pYekJmWjJ4dlltRnNMbXB3Wnd8NTYwZmExMTA3NWE3Y2Q4MTkzODgwMDU1NWU3NzRlZTZkMDZlZTdjMDQxM2U5YTc2MjEwNjUwMTVjMzRhMjYwOQ&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 42, name: "DEVIL'S INTRIGUE", brand: "Maison", price: 1260, stock: true, code: "w913", image: "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.52792.2x.avif", gallery: [
+      "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.52792.2x.avif",
+      "https://static.essensworld.com//images/goods/galleries/w91350x/w_913.jpg",
+      "https://static.essensworld.com/images/goods/full/W_913_01.jpg"
+    ] },
+    { id: 43, name: "EX NIHILO BLUE TALISMAN", brand: "Maison", price: 3940, stock: true, code: "w912", image: "https://www.miniparfum.eu/cdn/shop/files/w-ex-nihilo-blue-talisman-eau-de-parfum-50ml_4c2f80e2-4938-492a-bdcb-5292391a5397.webp?v=1748530738&width=1280", gallery: [
+      "https://www.miniparfum.eu/cdn/shop/files/w-ex-nihilo-blue-talisman-eau-de-parfum-50ml_4c2f80e2-4938-492a-bdcb-5292391a5397.webp?v=1748530738&width=1280",
+      "https://static.essensworld.com//images/goods/galleries/w91250xr/w_912.jpg",
+      "https://static.essensworld.com/images/goods/full/W_912_01.jpg"
+    ] },
+    { id: 44, name: "GYPSY WATER", brand: "Byredo", price: 2200, stock: true, code: "w911", image: "https://cdn.notinoimg.com/detail_main_mq/byredo/7340032806014_01-o/gypsy-water___221101.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/byredo/7340032806014_01-o/gypsy-water___221101.jpg",
+      "https://static.essensworld.com//images/goods/galleries/w91150xr/w_911.jpg",
+      "https://static.essensworld.com/images/goods/full/W_911_01.jpg"
+    ] },
+    { id: 45, name: "BITTER PEACH", brand: "Maison", price: 4695, stock: true, code: "w910", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/T/TOM_FORD/516585/211033-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/T/TOM_FORD/516585/211033-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com//images/goods/galleries/w91050xr/w_910.jpg",
+      "https://static.essensworld.com/images/goods/full/W_910_01.jpg"
+    ] },
+    { id: 46, name: "PINK MOLECULE 090.09", brand: "Molecule", price: 1700, stock: true, code: "w909", image: "https://media.douglas.cz/medias/kwzOzh1052383-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w2NzE2NHxpbWFnZS9qcGVnfGFHUTRMMmc0WkM4ME9UZ3dNRGN5TnpjNE9UVTVPQzlyZDNwUGVtZ3hNRFV5TXpnelh6QmZaR2RzTFVOYUxtcHdad3wyN2Y5MjBlZGYyOTI4YjA3ZTUyNGEyMDJjNDgyYjk3NGE3Zjc3ZGZkNjU3MjIzOTkyMTU0MDQ0Yzc3MWM4NTRh&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/kwzOzh1052383-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w2NzE2NHxpbWFnZS9qcGVnfGFHUTRMMmc0WkM4ME9UZ3dNRGN5TnpjNE9UVTVPQzlyZDNwUGVtZ3hNRFV5TXpnelh6QmZaR2RzTFVOYUxtcHdad3wyN2Y5MjBlZGYyOTI4YjA3ZTUyNGEyMDJjNDgyYjk3NGE3Zjc3ZGZkNjU3MjIzOTkyMTU0MDQ0Yzc3MWM4NTRh&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com//images/goods/galleries/w90950x/w_909.jpg",
+      "https://static.essensworld.com/images/goods/full/W_909_01.jpg"
+    ] },
+    { id: 48, name: "LAMAR", brand: "Maison", price: 1511, stock: true, code: "w906", image: "https://cdn.notinoimg.com/detail_main_mq/kajal/3760310290009_01-o/lamar___240909.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/kajal/3760310290009_01-o/lamar___240909.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w90650x/w_906.jpg",
+      "https://static.essensworld.com/images/goods/full/W_906_01.jpg"
+    ] },
+    { id: 49, name: "THE NARCOTICS GOOD GIRL GONE BAD", brand: "Maison", price: 3545, stock: true, code: "w904", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/K/KILIAN/500552/163621-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/K/KILIAN/500552/163621-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w90450x/w_904%202.jpg",
+      "https://static.essensworld.com/images/goods/full/W_904_01.jpg"
+    ] },
+    { id: 50, name: "CASSIOPEA", brand: "Tiziana Terenzi", price: 1985, stock: true, code: "w204", image: "https://media.douglas.cz/medias/bym8Md867861-0-global.jpg?context=bWFzdGVyfGltYWdlc3w4ODAyMXxpbWFnZS9qcGVnfGFEUXpMMmhsWlM4ME9EWTNOVEF5T1RReE9EQXhOQzlpZVcwNFRXUTROamM0TmpGZk1GOW5iRzlpWVd3dWFuQm58OTU0NGYwMzgxNDMwMjg3NmU2NGVjM2MzNmI5NDU3YzIyMDRjMDdiZmYwYTE0ZGUyZGU3MGFmMjBjMDUyNmUzMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/bym8Md867861-0-global.jpg?context=bWFzdGVyfGltYWdlc3w4ODAyMXxpbWFnZS9qcGVnfGFEUXpMMmhsWlM4ME9EWTNOVEF5T1RReE9EQXhOQzlpZVcwNFRXUTROamM0TmpGZk1GOW5iRzlpWVd3dWFuQm58OTU0NGYwMzgxNDMwMjg3NmU2NGVjM2MzNmI5NDU3YzIyMDRjMDdiZmYwYTE0ZGUyZGU3MGFmMjBjMDUyNmUzMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/W_907_01.jpg"
+    ] },
+    { id: 51, name: "OMNIA CORAL", brand: "Bvlgari", price: 850, stock: true, code: "w203", image: "https://cdn.notinoimg.com/detail_main_hq/bulgari/783320425493_03/omnia-coral___250822.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_hq/bulgari/783320425493_03/omnia-coral___250822.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_203.jpg",
+      "https://static.essensworld.com/images/goods/full/W203_01.jpg"
+    ] },
+    { id: 52, name: "NOMADE", brand: "Chloé", price: 980, stock: true, code: "w202", image: "https://cdn.notinoimg.com/detail_main_mq/chloe/3614223111565_01-o/nomade___221109.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/chloe/3614223111565_01-o/nomade___221109.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_202.jpg",
+      "https://static.essensworld.com/images/goods/full/W202_01.jpg"
+    ] },
+    { id: 53, name: "IRRESISTIBLE", brand: "Givenchy", price: 1025, stock: true, code: "w201", image: "https://cdn.notinoimg.com/detail_main_mq/givenchy/3274872400726_01/irresistible___220620.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/givenchy/3274872400726_01/irresistible___220620.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_201.jpg",
+      "https://static.essensworld.com/images/goods/full/W201_01.jpg"
+    ] },
+    { id: 54, name: "BORN IN ROMA", brand: "Valentino", price: 1325, stock: true, code: "w200", image: "https://cdn.notinoimg.com/detail_main_mq/valentino/3614272761438_01-o/born-in-roma-donna___230925.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/valentino/3614272761438_01-o/born-in-roma-donna___230925.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_200.jpg",
+      "https://static.essensworld.com/images/goods/full/W200_01.jpg"
+    ] },
+    { id: 55, name: "DEVOTION", brand: "Maison", price: 1185, stock: true, code: "w199", image: "https://cdn.notinoimg.com/detail_main_mq/dolcegabbana/8057971188284_01/devotion-eau-de-parfum-intense___240812.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/dolcegabbana/8057971188284_01/devotion-eau-de-parfum-intense___240812.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_199.jpg",
+      "https://static.essensworld.com/images/goods/full/W199_01.jpg"
+    ] },
+    { id: 56, name: "VOCE VIVA", brand: "Valentino", price: 1695, stock: true, code: "w198", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/V/VALENTINO/521893/217049-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/V/VALENTINO/521893/217049-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_198.jpg",
+      "https://static.essensworld.com/images/goods/full/W198_01.jpg"
+    ] },
+    { id: 57, name: "MOLECULE 01 + MANDARIN", brand: "Molecule", price: 985, stock: true, code: "w197", image: "https://cdn.notinoimg.com/detail_main_mq/escentric-molecules/5060103310692_01-o/molecule-01-mandarin___210527.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/escentric-molecules/5060103310692_01-o/molecule-01-mandarin___210527.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_197.jpg",
+      "https://static.essensworld.com/images/goods/full/W197_01.jpg"
+    ] },
+    { id: 58, name: "FLORA GORGEOUS GARDENIA", brand: "Gucci", price: 899, stock: true, code: "w196", image: "https://cdn.notinoimg.com/detail_main_uhq/gucci/3616302022489_01-o/flora-gorgeous-gardenia___210726.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_uhq/gucci/3616302022489_01-o/flora-gorgeous-gardenia___210726.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_196.jpg",
+      "https://static.essensworld.com/images/goods/full/W196_01.jpg"
+    ] },
+    { id: 59, name: "PARADOXE", brand: "Prada", price: 1025, stock: true, code: "w195", image: "https://cdn.notinoimg.com/detail_main_mq/prada/3614273760652_01-o/paradoxe___220825.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/prada/3614273760652_01-o/paradoxe___220825.jpg",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_195.jpg",
+      "https://static.essensworld.com/images/goods/full/W195_01.jpg"
+    ] },
+    { id: 60, name: "I AM", brand: "Mugler", price: 1295, stock: true, code: "w194", image: "https://cdn.notinoimg.com/detail_main_mq/eisenberg/3259550501155_01-o/i-am___240311.jpg", gallery: [
+      "https://static.essensworld.com/images/goods/galleries/w19450x/w_194.jpg",
+      "https://cdn.notinoimg.com/detail_main_mq/eisenberg/3259550501155_01-o/i-am___240311.jpg",
+      "https://static.essensworld.com/images/goods/full/W194_01.jpg"
+    ] },
+    { id: 61, name: "THE ONE", brand: "Dolce & Gabbana", price: 1310, stock: true, code: "w193", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/D/DOLCE___GABBANA/146345/64743-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/D/DOLCE___GABBANA/146345/64743-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/galleries/w19350x/w_193.jpg",
+      "https://static.essensworld.com/images/goods/full/W193_01.jpg"
+    ] },
+    { id: 62, name: "JASMIN NOIR", brand: "Bvlgari", price: 1095, stock: true, code: "w192", image: "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.3750.2x.avif", gallery: [
+      "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.3750.2x.avif",
+      "https://static.essensworld.com/images/goods/galleries/w19350x/w_193.jpg",
+      "https://static.essensworld.com/images/goods/full/W193_01.jpg"
+    ] },
+    { id: 63, name: "PARISIENNE", brand: "Yves Laurent", price: 1230, stock: true, code: "w190", image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSHLvV7Nin8LS2W_7I6g04Irrbz6rdXzxgYgzVhjgiIwqVCRLeq5L-0ytGBtkyQzC_YgaI4EB0mK-npb6B4P3XrTCRxhNHVpCy76MHCV9Fp0d-xkHettpgViJY", gallery: [
+      "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSHLvV7Nin8LS2W_7I6g04Irrbz6rdXzxgYgzVhjgiIwqVCRLeq5L-0ytGBtkyQzC_YgaI4EB0mK-npb6B4P3XrTCRxhNHVpCy76MHCV9Fp0d-xkHettpgViJY",
+      "https://static.essensworld.com/images/goods/galleries/w19050x/w190.jpg",
+      "https://static.essensworld.com/images/goods/full/W190_01.jpg"
+    ] },
+    { id: 64, name: "IDÔLE", brand: "Lancôme", price: 1445, stock: true, code: "w188", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/L/LANCO/486736/117915-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/L/LANCO/486736/117915-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/galleries/w18850x/w_188.jpg",
+      "https://static.essensworld.com/images/goods/full/W188_01.jpg"
+    ] },
+    { id: 65, name: "SCANDAL WOMAN", brand: "Jean Paul Gaultier", price: 985, stock: true, code: "w187", image: "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.60942.2x.avif", gallery: [
+      "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.60942.2x.avif",
+      "https://static.essensworld.com/images/goods/galleries/w18750x/w_187.jpg",
+      "https://static.essensworld.com/images/goods/full/W187_01.jpg"
+    ] },
+    { id: 66, name: "LIME BASIL & MANDARIN", brand: "Jo Malone London", price: 1465, stock: true, code: "w186", image: "https://media.douglas.cz/medias/8HgHVT080973-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wxODEyODh8aW1hZ2UvanBlZ3xhRFJoTDJoak5pODJOREkwTWpnMU9USXhNamd6TUM4NFNHZElWbFF3T0RBNU56TmZNRjlrWjJ3dFExb3VhbkJufDUzZDQyZWMwMDM3ZWNjNjg4MDcwODY0NWE2YjU0NmIwMjgzYzBkNWYyY2UzNzRmMzYyYmNjODNhNmM1NDg5ZTk&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/8HgHVT080973-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wxODEyODh8aW1hZ2UvanBlZ3xhRFJoTDJoak5pODJOREkwTWpnMU9USXhNamd6TUM4NFNHZElWbFF3T0RBNU56TmZNRjlrWjJ3dFExb3VhbkJufDUzZDQyZWMwMDM3ZWNjNjg4MDcwODY0NWE2YjU0NmIwMjgzYzBkNWYyY2UzNzRmMzYyYmNjODNhNmM1NDg5ZTk&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/r/200/goods/galleries/w20450x/w_197.jpg",
+      "https://static.essensworld.com/images/goods/full/W197_01.jpg"
+    ] },
+    { id: 67, name: "JOY BY DIOR", brand: "Dior", price: 1740, stock: true, code: "w185", image: "https://media.douglas.cz/medias/bDAYzR283735-0-global.png?context=bWFzdGVyfGltYWdlc3wxMjI1NjYyfGltYWdlL3BuZ3xhREE0TDJnNVpDODFNRFEwTmpnMk5qWXhNakkxTkM5aVJFRlplbEl5T0RNM016VmZNRjluYkc5aVlXd3VjRzVufGQ3M2E1OWFlMzJkNDcxODJhZWVkZDVjNmFjY2NiODM1MWI0MGM0MzcwNzE0YmM4Nzc5NWMxMzg3M2EwNDkzMzU&grid=true&transparent=true&imPolicy=grayScaledtransparent&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/bDAYzR283735-0-global.png?context=bWFzdGVyfGltYWdlc3wxMjI1NjYyfGltYWdlL3BuZ3xhREE0TDJnNVpDODFNRFEwTmpnMk5qWXhNakkxTkM5aVJFRlplbEl5T0RNM016VmZNRjluYkc5aVlXd3VjRzVufGQ3M2E1OWFlMzJkNDcxODJhZWVkZDVjNmFjY2NiODM1MWI0MGM0MzcwNzE0YmM4Nzc5NWMxMzg3M2EwNDkzMzU&grid=true&transparent=true&imPolicy=grayScaledtransparent&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/galleries/w18550x/w_185.jpg",
+      "https://static.essensworld.com/images/goods/full/W185_01.jpg"
+    ] },
+    { id: 68, name: "Alive Parfum", brand: "Hugo Boss", price: 1045, stock: true, code: "w184", image: "https://cdn.notinoimg.com/detail_main_uhq/hugo-boss/3616304252938_01-o/boss-alive-parfum___230215.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_uhq/hugo-boss/3616304252938_01-o/boss-alive-parfum___230215.jpg",
+      "https://static.essensworld.com/images/goods/galleries/w18450x/w_184.jpg",
+      "https://static.essensworld.com/images/goods/full/W184_01.jpg"
+    ] },
+    { id: 69, name: "NOT A PERFUME", brand: "Maison", price: 1312, stock: true, code: "w183", image: "https://maisondeparfum.eu/cdn/shop/files/notaperfume3.jpg?v=1763561837&width=2000", gallery: [
+      "https://maisondeparfum.eu/cdn/shop/files/notaperfume3.jpg?v=1763561837&width=2000",
+      "https://static.essensworld.com/images/goods/galleries/w18350x/w_183.jpg",
+      "https://static.essensworld.com/images/goods/full/W183_01.jpg"
+    ] },
+    { id: 70, name: "MUSK KASHMIR", brand: "Maison", price: 1013, stock: true, code: "w903", image: "https://cdn2.parfumdreams.de/image/product/139385-226129-0-0.webp?box=528", gallery: [
+      "https://cdn2.parfumdreams.de/image/product/139385-226129-0-0.webp?box=528",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 71, name: "STAR MAGNOLIA", brand: "Maison", price: 1240, stock: true, code: "w901", image: "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.54456.2x.avif", gallery: [
+      "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.54456.2x.avif",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 72, name: "CHANCE EAU TENDRE", brand: "Chanel", price: 1660, stock: true, code: "w182", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/massivpimupload/C/CHANEL/467331/112043-media_swatch.jpg", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/massivpimupload/C/CHANEL/467331/112043-media_swatch.jpg",
+      "https://static.essensworld.com/images/goods/full/w18250_perfume-w.jpg"
+    ] },
+    { id: 73, name: "L'INTERDIT", brand: "Givenchy", price: 1595, stock: true, code: "w181", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/G/GIVENCHY/437737/17403-media_swatch-2.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/G/GIVENCHY/437737/17403-media_swatch-2.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 74, name: "POMEGRANATE NOIR", brand: "Jo Malone London", price: 1700, stock: true, code: "w179", image: "https://media.douglas.cz/medias/0gH0MU279411-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wxMTAyMjR8aW1hZ2UvanBlZ3xhRGswTDJnNE1DODJOREkwTWpreE5UTXhNVFkwTmk4d1owZ3dUVlV5TnprME1URmZNRjlrWjJ3dFExb3VhbkJufGRkYWQyZTM2YjkyMzdkZmJjMTIxNDA0Mzg2ODljY2VhNWZkNDM1MWI5NGU0NWE4ZmFhNjcwNzU2NzczZmIxMWE&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/0gH0MU279411-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wxMTAyMjR8aW1hZ2UvanBlZ3xhRGswTDJnNE1DODJOREkwTWpreE5UTXhNVFkwTmk4d1owZ3dUVlV5TnprME1URmZNRjlrWjJ3dFExb3VhbkJufGRkYWQyZTM2YjkyMzdkZmJjMTIxNDA0Mzg2ODljY2VhNWZkNDM1MWI5NGU0NWE4ZmFhNjcwNzU2NzczZmIxMWE&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 75, name: "LA NUIT TRÉSOR NUDE", brand: "Lancôme", price: 895, stock: true, code: "w177", image: "https://static.fann.cz/uploads/varianty/13/97/01/13970-1.jpg", gallery: [
+      "https://static.fann.cz/uploads/varianty/13/97/01/13970-1.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 76, name: "EAU DE PARFUM II", brand: "Gucci", price: 1210, stock: true, code: "w175", image: "https://cdn.notinoimg.com/detail_main_mq/gucci/766124059705_01-o/eau-de-parfum-ii___130102.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/gucci/766124059705_01-o/eau-de-parfum-ii___130102.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 77, name: "HER INTENSE", brand: "Maison", price: 1645, stock: true, code: "w174", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/B/BURBERRY/755901/364754-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/B/BURBERRY/755901/364754-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/f/webp/goods/thumb/perfume-w.png"
+    ] },
+    { id: 78, name: "LIBRE", brand: "Yves Saint Laurent", price: 1725, stock: true, code: "w172", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/Y/YVES_SAINT_LAURENT/483046/121031-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/Y/YVES_SAINT_LAURENT/483046/121031-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 79, name: "MY WAY", brand: "Lancôme", price: 1285, stock: true, code: "w171", image: "https://cdn.notinoimg.com/detail_main_mq/armani/3614272907652_01-o/my-way___200722.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/armani/3614272907652_01-o/my-way___200722.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 80, name: "BOMBSHELL", brand: "Victoria's Secret", price: 945, stock: true, code: "w168", image: "https://cdn.notinoimg.com/detail_main_mq/victorias-secret/2495163000055_01-o/bombshell___210810.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/victorias-secret/2495163000055_01-o/bombshell___210810.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 81, name: "BECAUSE IT'S YOU", brand: "Armani", price: 1195, stock: true, code: "w166", image: "https://media.douglas.cz/medias/brucE0969172-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w3OTY1M3xpbWFnZS9qcGVnfGFETXlMMmd4TUM4ME9UZ3hOVEE1TURjeU5EZzVOQzlpY25WalJUQTVOamt4TnpKZk1GOWtaMnd0UTFvdWFuQm58MWRhNGFiMTdhY2NjMzk5MDczODBhMWZlYzE3ZDUyOGVmYTBkZDU0N2FlZTgwN2MwOTc0NDEwNWEwZjVmMjkzNw&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/brucE0969172-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w3OTY1M3xpbWFnZS9qcGVnfGFETXlMMmd4TUM4ME9UZ3hOVEE1TURjeU5EZzVOQzlpY25WalJUQTVOamt4TnpKZk1GOWtaMnd0UTFvdWFuQm58MWRhNGFiMTdhY2NjMzk5MDczODBhMWZlYzE3ZDUyOGVmYTBkZDU0N2FlZTgwN2MwOTc0NDEwNWEwZjVmMjkzNw&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 82, name: "WOMAN", brand: "Maison", price: 1985, stock: true, code: "w160", image: "https://img.vivantiscdn.net/photos/w600_h600_fN/p/_orig/MF/maison-francis-kurkdjian-amyris-femme-edp_1466519220201116154121.jpg", gallery: [
+      "https://img.vivantiscdn.net/photos/w600_h600_fN/p/_orig/MF/maison-francis-kurkdjian-amyris-femme-edp_1466519220201116154121.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 83, name: "MOLECULE 02", brand: "Molecule", price: 875, stock: true, code: "w159", image: "https://cdn.notinoimg.com/detail_main_mq/escentric-molecules/5060103310043_01-o/molecule-02___231011.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/escentric-molecules/5060103310043_01-o/molecule-02___231011.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 84, name: "ROSES MUSK", brand: "Maison", price: 885, stock: true, code: "w158", image: "https://cdn.notinoimg.com/detail_main_uhq/montale/3760260450003_01-o/roses-musk___141201.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_uhq/montale/3760260450003_01-o/roses-musk___141201.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 85, name: "ALIEN", brand: "Thierry Mugler", price: 1185, stock: true, code: "w157", image: "https://cdn.notinoimg.com/detail_main_uhq/mugler/3439600056921_01-o/alien___240226.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_uhq/mugler/3439600056921_01-o/alien___240226.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 86, name: "CHANCE EAU FRAÎCHE", brand: "Chanel", price: 1485, stock: true, code: "w156", image: "https://media.douglas.cz/medias/1wAttt304459-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wzMzAwNXxpbWFnZS9qcGVnfGFHWmpMMmcwWkM4MU1URTFPREUxTkRZME1UUXpPQzh4ZDBGMGRIUXpNRFEwTlRsZk1GOWtaMnd0UTFvdWFuQm58NmRlNTBlODUwZmNmYjAyZTlkYzBkMGE0ODY1OWRmOTIyZjA4Zjc1MjkxOTY5YjQ3MWUzN2QxZWZhZWFjMjM1Yg&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/1wAttt304459-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3wzMzAwNXxpbWFnZS9qcGVnfGFHWmpMMmcwWkM4MU1URTFPREUxTkRZME1UUXpPQzh4ZDBGMGRIUXpNRFEwTlRsZk1GOWtaMnd0UTFvdWFuQm58NmRlNTBlODUwZmNmYjAyZTlkYzBkMGE0ODY1OWRmOTIyZjA4Zjc1MjkxOTY5YjQ3MWUzN2QxZWZhZWFjMjM1Yg&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 87, name: "L'IMPERATRICE 3", brand: "Maison", price: 2500, stock: true, code: "w153", image: "https://parizske.cz/wp-content/uploads/perfume-anthology-3-l-imperatrice-dolce-gabbana-22o.jpg", gallery: [
+      "https://parizske.cz/wp-content/uploads/perfume-anthology-3-l-imperatrice-dolce-gabbana-22o.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 88, name: "GOOD GIRL", brand: "Carolina Herrera", price: 1445, stock: true, code: "w151", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/C/CAROLINA_HERRERA/363325/9226-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/C/CAROLINA_HERRERA/363325/9226-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 89, name: "OLYMPÉA", brand: "Paco Rabanne", price: 995, stock: true, code: "w150", image: "https://cdn.notinoimg.com/detail_main_mq/paco-rabanne/3349668568093_01-o/olympea___250428.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/paco-rabanne/3349668568093_01-o/olympea___250428.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 90, name: "DECADENCE", brand: "Marc Jacobs", price: 900, stock: true, code: "w149", image: "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.31226.2x.avif", gallery: [
+      "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.31226.2x.avif",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 91, name: "SÌ", brand: "Giorgio Armani", price: 1185, stock: true, code: "w148", image: "https://media.douglas.cz/medias/cybC5E753266-0-global.jpg?context=bWFzdGVyfGltYWdlc3wxMjIxMDZ8aW1hZ2UvanBlZ3xhREppTDJnMVppODJNell3TWpneE1UQTBNemczTUM5amVXSkROVVUzTlRNeU5qWmZNRjluYkc5aVlXd3VhbkJufGFjNmQ4ODEyZjRiOGY0MWZiZGY5MzQ4OWY3Njg0ZmIxYjE0YTA0MjRkMzcwOGVmZDhmMTQ2ZTA1ZTg1OWQ4ZWY&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/cybC5E753266-0-global.jpg?context=bWFzdGVyfGltYWdlc3wxMjIxMDZ8aW1hZ2UvanBlZ3xhREppTDJnMVppODJNell3TWpneE1UQTBNemczTUM5amVXSkROVVUzTlRNeU5qWmZNRjluYkc5aVlXd3VhbkJufGFjNmQ4ODEyZjRiOGY0MWZiZGY5MzQ4OWY3Njg0ZmIxYjE0YTA0MjRkMzcwOGVmZDhmMTQ2ZTA1ZTg1OWQ4ZWY&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 92, name: "HYPNOTIC POISON", brand: "Dior", price: 1475, stock: true, code: "w145", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/D/DIOR/60354/27260-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/D/DIOR/60354/27260-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 93, name: "ANGE OU DEMON LE SECRET", brand: "Givenchy", price: 1000, stock: true, code: "w144", image: "https://cdn.notinoimg.com/detail_main_mq/givenchy/3274870002694_01/ange-ou-demon-le-secret___220711.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/givenchy/3274870002694_01/ange-ou-demon-le-secret___220711.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 94, name: "NO. 5", brand: "Chanel", price: 1160, stock: true, code: "w143", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/C/CHANEL/60385/27252-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/C/CHANEL/60385/27252-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 95, name: "BLACK OPIUM", brand: "Yves Saint Laurent", price: 1715, stock: true, code: "w142", image: "https://static.fann.cz/uploads/varianty/56/42/5642-1.jpg", gallery: [
+      "https://static.fann.cz/uploads/varianty/56/42/5642-1.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 96, name: "LA VIE EST BELLE", brand: "Lancôme", price: 1025, stock: true, code: "w141", image: "https://cdn.notinoimg.com/detail_main_mq/lancome/3605532612768_01-o/la-vie-est-belle___250312.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/lancome/3605532612768_01-o/la-vie-est-belle___250312.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 97, name: "FLOWERBOMB", brand: "Viktor&Rolf", price: 1295, stock: true, code: "w138", image: "https://media.douglas.cz/medias/YdndWn198566-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w2MDUwN3xpbWFnZS9qcGVnfGFERTBMMmhrTUM4ME9UZ3dNVFl3TlRRME56Y3hNQzlaWkc1a1YyNHhPVGcxTmpaZk1GOWtaMnd0UTFvdWFuQm58M2E4YjJmNWNmYTY4OTMzYzYyNjNiMWNhY2ZkMTIxZDZiZWI1MTlhOWRiNDMwN2NjMGZhY2VlYzVmZmY1MTcyMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/YdndWn198566-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w2MDUwN3xpbWFnZS9qcGVnfGFERTBMMmhrTUM4ME9UZ3dNVFl3TlRRME56Y3hNQzlaWkc1a1YyNHhPVGcxTmpaZk1GOWtaMnd0UTFvdWFuQm58M2E4YjJmNWNmYTY4OTMzYzYyNjNiMWNhY2ZkMTIxZDZiZWI1MTlhOWRiNDMwN2NjMGZhY2VlYzVmZmY1MTcyMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 98, name: "CODE", brand: "Giorgio Armani", price: 1095, stock: true, code: "w134", image: "https://cdn.notinoimg.com/detail_main_hq/armani/3614273605069_13/code-parfum___230511.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_hq/armani/3614273605069_13/code-parfum___230511.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 99, name: "MOON SPARKLE", brand: "Maison", price: 1185, stock: true, code: "w130", image: "https://cdn.notinoimg.com/detail_main_mq/escada/escmosw_aedt/moon-sparkle___130313.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/escada/escmosw_aedt/moon-sparkle___130313.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 100, name: "COCO CHANCE", brand: "Chanel", price: 1710, stock: true, code: "w124", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/C/CHANEL/132480/383028-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/C/CHANEL/132480/383028-media_swatch.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/w12450_perfume-w.jpg"
+    ] },
+    { id: 102, name: "POUR FEMME", brand: "Michael Kors", price: 1385, stock: true, code: "w116", image: "https://media.douglas.cz/medias/oWIWKe1187368-0-global.jpg?context=bWFzdGVyfGltYWdlc3wxMjU3OTl8aW1hZ2UvanBlZ3xhR0ZoTDJnNU1DODJNemN3TXpZME1UZzBPVGc0Tmk5dlYwbFhTMlV4TVRnM016WTRYekJmWjJ4dlltRnNMbXB3Wnd8NzIyNGFiNjg2Y2U1MThmNjY5NmNhZDYwNmUzODFiM2QzM2VlZjcyOTA3MGJhZTg1M2Q5NjkzMzQ2Y2RlY2JhMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/oWIWKe1187368-0-global.jpg?context=bWFzdGVyfGltYWdlc3wxMjU3OTl8aW1hZ2UvanBlZ3xhR0ZoTDJnNU1DODJNemN3TXpZME1UZzBPVGc0Tmk5dlYwbFhTMlV4TVRnM016WTRYekJmWjJ4dlltRnNMbXB3Wnd8NzIyNGFiNjg2Y2U1MThmNjY5NmNhZDYwNmUzODFiM2QzM2VlZjcyOTA3MGJhZTg1M2Q5NjkzMzQ2Y2RlY2JhMA&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 103, name: "ANGEL", brand: "Thierry Mugler", price: 1485, stock: true, code: "w115", image: "https://cdn.notinoimg.com/detail_main_mq/mugler/3439600056532_01-o/angel___250214.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/mugler/3439600056532_01-o/angel___250214.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 104, name: "RUSH 2", brand: "Gucci", price: 1200, stock: true, code: "w114", image: "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.687.2x.avif", gallery: [
+      "https://fimgs.net/mdimg/perfume-thumbs/dark-375x500.687.2x.avif",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 105, name: "BRIGHT CRYSTAL", brand: "Versace", price: 885, stock: true, code: "w111", image: "https://cdn.notinoimg.com/detail_main_mq/versace/verbrcw_aedt20_02-o/bright-crystal___121127.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/versace/verbrcw_aedt20_02-o/bright-crystal___121127.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 106, name: "DAISY", brand: "Marc Jacobs", price: 1085, stock: true, code: "w110", image: "https://media.douglas.cz/medias/Uioekx336914-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w2MDAzN3xpbWFnZS9qcGVnfGFEaGhMMmhpT1M4ME9UZ3lNak16T0RZM09EZ3hOQzlWYVc5bGEzZ3pNelk1TVRSZk1GOWtaMnd0UTFvdWFuQm58OGE3OWFkNDMxMjNiNmVlN2ZlNDllMDJhN2I3NTc4OTA0MzIwM2U2Y2JmMjA1NWQzNTI2Y2IzOTc3YzRiM2FiOQ&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/Uioekx336914-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w2MDAzN3xpbWFnZS9qcGVnfGFEaGhMMmhpT1M4ME9UZ3lNak16T0RZM09EZ3hOQzlWYVc5bGEzZ3pNelk1TVRSZk1GOWtaMnd0UTFvdWFuQm58OGE3OWFkNDMxMjNiNmVlN2ZlNDllMDJhN2I3NTc4OTA0MzIwM2U2Y2JmMjA1NWQzNTI2Y2IzOTc3YzRiM2FiOQ&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 107, name: "EAU DE PARFUM", brand: "Maison", price: 985, stock: true, code: "w107", image: "https://static.essensworld.com/images/goods/full/perfume-w.png", gallery: [
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 108, name: "ACQUA DI GIOIA", brand: "Armani", price: 1023, stock: true, code: "w106", image: "https://media.douglas.cz/medias/EjOrJt530512-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w0ODQ2N3xpbWFnZS9qcGVnfGFHSTJMMmhqTXk4ME9UYzVOVFUwTVRBd09EUXhOQzlGYWs5eVNuUTFNekExTVRKZk1GOWtaMnd0UTFvdWFuQm58OTY1ZGMyMTE5ZDUxNmFjYTdmOGMzMDYxNGQwNmUyOTc1NmJiN2RhZjRiYTlkY2RmZmUxYTIyMmEwNmRmZGQ0OQ&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603", gallery: [
+      "https://media.douglas.cz/medias/EjOrJt530512-0-dgl-CZ.jpg?context=bWFzdGVyfGltYWdlc3w0ODQ2N3xpbWFnZS9qcGVnfGFHSTJMMmhqTXk4ME9UYzVOVFUwTVRBd09EUXhOQzlGYWs5eVNuUTFNekExTVRKZk1GOWtaMnd0UTFvdWFuQm58OTY1ZGMyMTE5ZDUxNmFjYTdmOGMzMDYxNGQwNmUyOTc1NmJiN2RhZjRiYTlkY2RmZmUxYTIyMmEwNmRmZGQ0OQ&grid=true&imPolicy=grayScaled&imdensity=1&imwidth=603",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 109, name: "BE DELICIOUS", brand: "Donna Karan", price: 785, stock: true, code: "w105", image: "https://cdn.notinoimg.com/detail_main_mq/dkny/763511009824x_01-o/be-delicious___130515.jpg", gallery: [
+      "https://cdn.notinoimg.com/detail_main_mq/dkny/763511009824x_01-o/be-delicious___130515.jpg",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] },
+    { id: 110, name: "LIGHT BLUE", brand: "Dolce & Gabbana", price: 1125, stock: true, code: "w104", image: "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/D/DOLCE___GABBANA/811527/399144-media_swatch-0.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit", gallery: [
+      "https://media.sephora.eu/content/dam/gdam/europe/digital/pim/published/D/DOLCE___GABBANA/811527/399144-media_swatch-0.jpg?scaleWidth=750&scaleHeight=750&scaleMode=fit",
+      "https://static.essensworld.com/images/goods/full/perfume-w.png"
+    ] }
+  ],
+};
+const PRODUCTS_BY_ID = {};
+Object.values(FRAGRANCES).flat().forEach(p => PRODUCTS_BY_ID[p.id] = p);
+const MAX_PRODUCT_PRICE = Math.max(...Object.values(FRAGRANCES).flat().map(p => p.price));
+
+/* ====== Состояние ====== */
+let currentCategory = 'Women';
+let priceSort = 'desc';
+let listView = 'grid';
+let selectedProductId = null;
+const cart = {}; // id -> qty
+const priceFilter = { min: 0, max: MAX_PRODUCT_PRICE };
+const DELIVERY_OPTIONS = {
+  delivery: { label: 'Zasilkovna', price: 85 },
+  cash: { label: 'Оплата на руки', price: 0 }
+};
+let selectedDelivery = 'delivery';
+
+function shippingPrice() {
+  return DELIVERY_OPTIONS[selectedDelivery].price;
+}
+
+function cartTotalWithShipping() {
+  return cartTotal() + shippingPrice();
+}
+
+function renderDeliveryOptions(targetId, name) {
+  const container = document.getElementById(targetId);
+  if (!container) return;
+
+  container.innerHTML = Object.entries(DELIVERY_OPTIONS).map(([key, option]) => `
+    <button type="button" class="delivery-option ${selectedDelivery === key ? 'active' : ''}" data-delivery="${key}">
+      <span>${option.label}</span>
+      <strong>${option.price.toLocaleString('ru-RU')} Kč</strong>
+    </button>
+  `).join('');
+
+  container.querySelectorAll('.delivery-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedDelivery = btn.dataset.delivery;
+      renderDeliveryOptions(targetId, name);
+      if (targetId === 'cartDeliveryOptions') {
+        renderCart();
+      }
+    });
+  });
+}
+
+function renderSortControls() {
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    const isActive = btn.dataset.sort === priceSort;
+    btn.classList.toggle('active', isActive);
+  });
+}
+
+function renderViewControls() {
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === listView);
+  });
+}
+
+/* ====== Флакон-иконка (SVG, абстрактный, цвет по категории) ====== */
+function flaconSVG(color) {
+  return `<svg class="flacon" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="17" y="4" width="12" height="7" rx="1.5" fill="${color}" opacity="0.85"/>
+    <rect x="19" y="1" width="8" height="4" rx="1" fill="${color}"/>
+    <path d="M14 14C14 12 15.5 11 18 11H28C30.5 11 32 12 32 14V38C32 41 29.5 43 26 43H20C16.5 43 14 41 14 38V14Z" stroke="${color}" stroke-width="2" fill="none"/>
+    <line x1="14" y1="24" x2="32" y2="24" stroke="${color}" stroke-width="1.2" opacity="0.5"/>
+  </svg>`;
+}
+
+/* ====== Рендер ====== */
+function renderTabs() {
+  const tabs = document.getElementById('tabs');
+  const orderedCategories = ['Women', 'Luxury', 'Men'];
+  tabs.innerHTML = orderedCategories.map(cat => `
+    <button data-cat="${cat}" class="${cat === currentCategory ? 'active' : ''}" style="--accent:${CATEGORY_ACCENT[cat]}">
+      ${CATEGORY_LABEL[cat]}
+    </button>
+  `).join('');
+  tabs.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentCategory = btn.dataset.cat;
+      renderTabs();
+      renderList();
+    });
+  });
+}
+
+function renderPriceFilter() {
+  const minRange = document.getElementById('minPriceRange');
+  const maxRange = document.getElementById('maxPriceRange');
+  const highlight = document.getElementById('priceRangeHighlight');
+
+  minRange.min = 0;
+  minRange.max = MAX_PRODUCT_PRICE;
+  maxRange.min = 0;
+  maxRange.max = MAX_PRODUCT_PRICE;
+
+  minRange.value = String(priceFilter.min);
+  maxRange.value = String(priceFilter.max);
+
+  const start = (priceFilter.min / MAX_PRODUCT_PRICE) * 100;
+  const end = (priceFilter.max / MAX_PRODUCT_PRICE) * 100;
+  const left = Math.min(start, end);
+  const width = Math.abs(end - start);
+
+  highlight.style.left = left + '%';
+  highlight.style.width = width + '%';
+
+  document.getElementById('minPriceValue').textContent = `${priceFilter.min.toLocaleString('ru-RU')} Kč`;
+  document.getElementById('maxPriceValue').textContent = `${priceFilter.max.toLocaleString('ru-RU')} Kč`;
+}
+
+function productCardTheme(product) {
+  return {
+    background: 'var(--paper)',
+    border: 'var(--rule)'
+  };
+}
+
+function renderList() {
+  const list = document.getElementById('productList');
+  const accent = CATEGORY_ACCENT[currentCategory];
+  list.dataset.view = listView;
+  const sortedProducts = [...FRAGRANCES[currentCategory]].sort((a, b) =>
+    priceSort === 'desc' ? b.price - a.price : a.price - b.price
+  );
+  const visibleProducts = sortedProducts.filter(p => p.price >= priceFilter.min && p.price <= priceFilter.max);
+
+  if (!visibleProducts.length) {
+    list.innerHTML = '<div class="empty-state">По вашему диапазону цен ничего не найдено.</div>';
+    return;
+  }
+
+  list.innerHTML = visibleProducts.map(p => {
+    const gender = currentCategory === 'Women' ? 'Women' : currentCategory === 'Men' ? 'Men' : '';
+    const cardTheme = productCardTheme(p);
+    return `
+      <div class="product ${p.stock ? '' : 'out'} ${p.name === 'EX NIHILO BLUE TALISMAN' ? 'blue-talisman' : ''} ${p.name === 'BITTER PEACH' ? 'bitter-peach' : ''}" style="--card-bg:${cardTheme.background}; --card-border:${cardTheme.border};" data-id="${p.id}">
+        ${p.image
+          ? `<div class="product-thumb"><img src="${p.image}" alt="${p.name}"></div>`
+          : flaconSVG(p.stock ? accent : 'var(--out-of-stock)')}
+        <div>
+          <span class="brand">${p.brand}</span>
+          <span class="name">${p.name}</span>
+          ${gender ? `<span class="gender">${gender}</span>` : ''}
+          <div class="status">${p.stock ? '· В наличии' : '· Нет в наличии'}</div>
+          <div class="volume">50 ml</div>
+        </div>
+        <div class="price">${p.price.toLocaleString('ru-RU')} Kč</div>
+      </div>
+    `;
+  }).join('');
+  list.querySelectorAll('.product').forEach(el => {
+    el.addEventListener('click', () => openProduct(parseInt(el.dataset.id)));
+  });
+}
+
+function renderProductVisual(product) {
+  const visual = document.getElementById('productVisual');
+  if (product.gallery && product.gallery.length > 1) {
+    const dots = product.gallery.map((_, idx) => `
+      <span class="gallery-dot ${idx === 0 ? 'active' : ''}"></span>
+    `).join('');
+
+    visual.innerHTML = `
+      <div style="width:100%;">
+        <div class="product-gallery-wrap">
+          <button type="button" class="gallery-arrow left" aria-label="Предыдущая фотография">‹</button>
+          <div class="product-gallery" aria-label="Галерея фото продукта">
+            ${product.gallery.map(src => `
+              <div class="gallery-slide">
+                <img src="${src}" alt="${product.name} perfume bottle">
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" class="gallery-arrow right" aria-label="Следующая фотография">›</button>
+        </div>
+        <div class="gallery-dots">${dots}</div>
+      </div>
+    `;
+
+    const gallery = visual.querySelector('.product-gallery');
+    const dotsEls = visual.querySelectorAll('.gallery-dot');
+    const leftArrow = visual.querySelector('.gallery-arrow.left');
+    const rightArrow = visual.querySelector('.gallery-arrow.right');
+    const flipGallery = (arrow, distance) => {
+      arrow.classList.remove('is-being-held');
+      void arrow.offsetWidth;
+      arrow.classList.add('is-being-held');
+      gallery.classList.remove('is-turning');
+      void gallery.offsetWidth;
+      gallery.classList.add('is-turning');
+      gallery.scrollBy({ left: distance, behavior: 'smooth' });
+      setTimeout(() => arrow.classList.remove('is-being-held'), 800);
+    };
+
+    const updateGallery = () => {
+      const index = Math.round(gallery.scrollLeft / gallery.clientWidth);
+      dotsEls.forEach((dot, i) => dot.classList.toggle('active', i === index));
+    };
+
+    leftArrow.addEventListener('click', () => {
+      flipGallery(leftArrow, -gallery.clientWidth);
+    });
+    rightArrow.addEventListener('click', () => {
+      flipGallery(rightArrow, gallery.clientWidth);
+    });
+    gallery.addEventListener('scroll', updateGallery);
+    return;
+  }
+
+  if (product.image) {
+    visual.innerHTML = `
+      <div class="product-gallery-wrap">
+        <img src="${product.image}" alt="${product.name} perfume bottle">
+      </div>
+    `;
+    return;
+  }
+
+  visual.innerHTML = `
+    <div class="product-gallery-wrap">
+      ${flaconSVG(CATEGORY_ACCENT[currentCategory])}
+    </div>
+  `;
+}
+
+function openProduct(id) {
+  const p = PRODUCTS_BY_ID[id];
+  selectedProductId = id;
+  document.getElementById('pBrand').textContent = p.brand;
+  const genderLabel = currentCategory === 'Women' ? 'Women' : currentCategory === 'Men' ? 'Men' : '';
+  document.getElementById('pGender').textContent = genderLabel;
+  document.getElementById('pGender').style.display = genderLabel ? 'inline-block' : 'none';
+  document.getElementById('pName').textContent = p.name;
+  document.getElementById('pPrice').textContent = p.price.toLocaleString('ru-RU') + ' Kč';
+  renderProductVisual(p);
+  const statusEl = document.getElementById('pStatus');
+  statusEl.textContent = p.stock ? 'В наличии' : 'Нет в наличии';
+  statusEl.className = 'p-status' + (p.stock ? '' : ' out');
+  const volumeEl = document.getElementById('pVolume');
+  if (volumeEl) volumeEl.textContent = '50 ml';
+  renderDeliveryOptions('productDeliveryOptions', 'productDelivery');
+  const productDescription = document.getElementById('productDescription');
+  if (p.name === 'FLOWERBOMB') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, чай</div>
+      <div><strong>Ноты сердца:</strong> жасмин, цветок африканского апельсина, фрезия, роза, орхидея</div>
+      <div><strong>База:</strong> мускус, пачули</div>
+    `;
+  } else if (p.name === 'JOY BY DIOR') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, мандарин, апельсин</div>
+      <div><strong>Ноты сердца:</strong> роза, жасмин</div>
+      <div><strong>База:</strong> сандаловое и кедровое дерево, пачули, мускус</div>
+    `;
+  } else if (p.name === 'LADY MILLION') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> нероли, цитрон, малина</div>
+      <div><strong>Ноты сердца:</strong> цветок апельсина, жасмин, гардения</div>
+      <div><strong>База:</strong> пачули, белый мёд</div>
+    `;
+  } else if (p.name === 'COCO MADEMOISELLE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> апельсин, цветок апельсина, мандарин, бергамот</div>
+      <div><strong>Ноты сердца:</strong> мимоза, жасмин, турецкая роза, иланг-иланг</div>
+      <div><strong>База:</strong> боб тонка, пачули, сладкая мирра, ваниль, ветивер, белый мускус</div>
+    `;
+  } else if (p.name === 'SÌ') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> чёрная смородина</div>
+      <div><strong>Ноты сердца:</strong> цветы, фрезия, весенняя роза</div>
+      <div><strong>База:</strong> ваниль, пачули, амброксан</div>
+    `;
+  } else if (p.name === 'NOT A PERFUME') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> амбра</div>
+      <div><strong>Ноты сердца:</strong> амбра, белые цветы</div>
+      <div><strong>База:</strong> мускус, древесные ноты, пудровые ноты</div>
+      <div><strong>Тип аромата:</strong> ориентальный</div>
+    `;
+  } else if (p.name === 'BORN IN ROMA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, перец, чёрная смородина</div>
+      <div><strong>Ноты сердца:</strong> жасмин</div>
+      <div><strong>База:</strong> кашмеран, ваниль</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">❄️</span> зима, <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">☀️</span> лето, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else if (p.name === 'DECADENCE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> слива, чёрная смородина, шафран, мандарин, листья фиалки</div>
+      <div><strong>Ноты сердца:</strong> ирис, роза, фиалка, кедровое дерево</div>
+      <div><strong>База:</strong> пачули, ветивер, папирус, ваниль, мускус</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">❄️</span> зима</div>
+    `;
+  } else if (p.name === 'NOMADE') {
+    productDescription.innerHTML = `
+      <div>Этот аромат ослепляет свежестью лимона и бергамота, соединённой с цветочными нотами жасмина. Пряные ноты мускатного ореха и перца создают мягкий контраст. Композицию дополняют нежная кремовая амбра и тёплые древесные ноты.</div>
+      <div><strong>Верхние ноты:</strong> бергамот, лимон, перец, мускатный орех</div>
+      <div><strong>Ноты сердца:</strong> жасмин, мох, сочный арбуз</div>
+      <div><strong>База:</strong> амбра, древесные ноты</div>
+      <div><strong>Тип аромата:</strong> шипровый, цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else if (p.name === 'FLORA GORGEOUS GARDENIA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> груша, лесные ягоды</div>
+      <div><strong>Ноты сердца:</strong> гардения, плюмерия</div>
+      <div><strong>База:</strong> пачули, коричневый сахар</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">☀️</span> лето</div>
+    `;
+  } else if (p.name === 'ALIEN') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> жасмин, карамель</div>
+      <div><strong>Ноты сердца:</strong> кашемир</div>
+      <div><strong>База:</strong> древесные ноты, амбра</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">❄️</span> зима, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else if (p.name === 'GYPSY WATER') {
+    productDescription.innerHTML = `
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">☀️</span> лето, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else if (p.name === 'OLYMPÉA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> имбирь, жасмин, мандарин</div>
+      <div><strong>Ноты сердца:</strong> ваниль, соль</div>
+      <div><strong>База:</strong> амбра, кашемир, сандаловое дерево</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">❄️</span> зима, <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">☀️</span> лето, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else if (p.name === 'DEVOTION') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> лимон, сладкая карамель, ром</div>
+      <div><strong>Ноты сердца:</strong> panna cotta, цветок апельсинового дерева, молоко</div>
+      <div><strong>База:</strong> ваниль, древесные ноты, амбра, бензоин, пачули</div>
+      <div><strong>Тип аромата:</strong> сладкий, кремовый, теплый</div>
+    `;
+  } else if (p.name === 'MY WAY') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, зелёные ноты, фруктовые ноты</div>
+      <div><strong>Ноты сердца:</strong> жасмин, иланг-иланг, ландыш</div>
+      <div><strong>База:</strong> кедр, мускус, амбра, карамель</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'ANGEL') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> арбуз, кокос, апельсин, корица, жасмин, бергамот, сахарная вата</div>
+      <div><strong>Ноты сердца:</strong> мёд, абрикос, ежевика, слива, орхидея, персик, жасмин, красные фрукты, роза</div>
+      <div><strong>База:</strong> бобы тонка, амбра, пачули, мускус, ваниль, карамель, тёмный шоколад</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === "DEVIL'S INTRIGUE") {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> цветок апельсинового дерева, чай, грейпфрут</div>
+      <div><strong>Ноты сердца:</strong> цветок апельсина, жасмин, сандаловое дерево</div>
+      <div><strong>База:</strong> ваниль, кашемир, древесные ноты</div>
+      <div><strong>Тип аромата:</strong> цветочный, древесный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === "L'IMPERATRICE 3") {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> арбуз, киви</div>
+      <div><strong>Ноты сердца:</strong> цветочные ноты, бамбук</div>
+      <div><strong>База:</strong> дерево, пачули</div>
+      <div><strong>Тип аромата:</strong> свежий, цветочный, древесный</div>
+    `;
+  } else if (p.name === "BECAUSE IT'S YOU") {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> малина, нероли</div>
+      <div><strong>Ноты сердца:</strong> роза</div>
+      <div><strong>База:</strong> ваниль, пачули</div>
+      <div><strong>Тип аромата:</strong> фруктово-цветочный, сладкий и мягкий</div>
+    `;
+  } else if (p.name === "J'ADORE") {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> мандарин, роза, африканская орхидея</div>
+      <div><strong>Ноты сердца:</strong> ежевика, слива, фиалка</div>
+      <div><strong>База:</strong> мускус, амарантовое дерево, плющ</div>
+      <div><strong>Тип аромата:</strong> цветочно-фруктовый, свежий и воздушный</div>
+    `;
+  } else if (p.name === 'POUR FEMME') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> ямайский перец, фрезия, яблоко</div>
+      <div><strong>Ноты сердца:</strong> фиалка, гибискус, жасмин, гелиотроп, роза</div>
+      <div><strong>База:</strong> лабданум, сандаловое дерево, ладанный аромат, кедровое дерево, мох</div>
+      <div><strong>Тип аромата:</strong> древесно-цветочный, теплый и мягкий</div>
+    `;
+  } else if (p.name === 'MOON SPARKLE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> чёрная смородина, цитрусовые, лесные ягоды, красное яблоко</div>
+      <div><strong>Сердце:</strong> фрезия, сладкий горошек, жасмин, роза</div>
+      <div><strong>База:</strong> сандаловое дерево, амбра, пачули, малина</div>
+      <div><strong>Тип аромата:</strong> цветочно-фруктовый, светлый и искристый</div>
+    `;
+  } else if (p.name === 'OMNIA CORAL') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, китайская гардения</div>
+      <div><strong>Ноты сердца:</strong> водяная лилия, гибискус, гранатовое яблоко</div>
+      <div><strong>База:</strong> пачули, виргинский кедр</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'PARISIENNE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> ежевика, клюква</div>
+      <div><strong>Ноты сердца:</strong> роза, фиалка, пион</div>
+      <div><strong>База:</strong> мускус, сандаловое дерево, ветивер, пачули</div>
+      <div><strong>Тип аромата:</strong> цветочно-фруктовый, теплый и сладкий</div>
+    `;
+  } else if (p.name === 'EAU DE PARFUM II') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> пион, фрезия, личи</div>
+      <div><strong>Ноты сердца:</strong> роза, магнолия, ландыш</div>
+      <div><strong>База:</strong> амбра, кедровое дерево</div>
+      <div><strong>Тип аромата:</strong> цветочно-древесный, свежий и мягкий</div>
+    `;
+  } else if (p.name === 'LA NUIT TRÉSOR NUDE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> свежие ноты, кокос, бергамот</div>
+      <div><strong>Ноты сердца:</strong> жасмин, кедровое дерево, пачули</div>
+      <div><strong>База:</strong> ваниль, мускус, сладкие ноты</div>
+      <div><strong>Тип аромата:</strong> свежий, древесный, сладкий</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'BITTER PEACH') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> персик, мёд, бергамот</div>
+      <div><strong>Ноты сердца:</strong> пачули, жасмин, кедровое дерево</div>
+      <div><strong>База:</strong> ваниль, сандаловое дерево, мускус</div>
+      <div><strong>Тип аромата:</strong> фруктовый, древесный, сладкий</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'IRRESISTIBLE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> груша, амбретта</div>
+      <div><strong>Ноты сердца:</strong> роза, ирис</div>
+      <div><strong>База:</strong> мускус, кедровое дерево</div>
+      <div><strong>Тип аромата:</strong> цветочный, фруктовый, мускусный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === "L'INTERDIT") {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, груша, вишня</div>
+      <div><strong>Ноты сердца:</strong> тубероза, цветок апельсина, жасмин</div>
+      <div><strong>База:</strong> пачули, ветивер, амбра, карамель, ваниль</div>
+      <div><strong>Тип аромата:</strong> цветочный, сладкий, тёплый</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'COCO CHANCE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> ананас, ирис, пачули, розовый перец, гиацинт</div>
+      <div><strong>Ноты сердца:</strong> жасмин, цитрусовые</div>
+      <div><strong>База:</strong> мускус, пачули, белый мускус, ветивер</div>
+      <div><strong>Тип аромата:</strong> шипровый, цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'GOOD GIRL') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> миндаль, зелёные ноты, перец, чёрная смородина</div>
+      <div><strong>Ноты сердца:</strong> ландыш, жасмин, тубероза</div>
+      <div><strong>База:</strong> бобы тонка, какао, амбра</div>
+      <div><strong>Тип аромата:</strong> цветочный, сладкий, тёплый</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'PARADOXE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> груша, мандарин</div>
+      <div><strong>Ноты сердца:</strong> цветок апельсинового дерева, жасмин, нероли</div>
+      <div><strong>База:</strong> амбра, мускус, ваниль, бензоин</div>
+      <div><strong>Тип аромата:</strong> цветочный, амбровый</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'IDÔLE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, лимон, груша, иланг-иланг</div>
+      <div><strong>Ноты сердца:</strong> жасмин, ландыш, лилия, роза</div>
+      <div><strong>База:</strong> мускус, пачули, амбра, древесные ноты</div>
+      <div><strong>Тип аромата:</strong> цветочный, свежий, древесный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'LA VIE EST BELLE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> груша, чёрная смородина</div>
+      <div><strong>Ноты сердца:</strong> ирис, жасмин, цветок апельсинового дерева</div>
+      <div><strong>База:</strong> пачули, бобы тонка, пралине, ваниль</div>
+      <div><strong>Тип аромата:</strong> цветочный, сладкий, пудровый</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'BLACK OPIUM') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> груша, цветок апельсинового дерева, розовый перец</div>
+      <div><strong>Ноты сердца:</strong> кофе, жасмин, ветивер</div>
+      <div><strong>База:</strong> пачули, кедровое дерево, ваниль</div>
+      <div><strong>Тип аромата:</strong> цветочный, кофейный, тёплый</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'THE ONE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> личи, мандарин, апельсин, персик, бергамот</div>
+      <div><strong>Ноты сердца:</strong> лилия, слива, жасмин, ландыш</div>
+      <div><strong>База:</strong> амбра, мускус, ваниль, ветивер</div>
+      <div><strong>Тип аромата:</strong> восточный, цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'CHANCE EAU FRAÎCHE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> цитрусовые ноты, кедровое дерево</div>
+      <div><strong>Ноты сердца:</strong> жасмин, розовый перец, водяной гиацинт</div>
+      <div><strong>База:</strong> тиковое дерево, ирис, амбра, пачули, мускус</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'CHANCE EAU TENDRE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> иланг-иланг, грейпфрут, роза, яблоко</div>
+      <div><strong>Ноты сердца:</strong> фиалка, киви, кассия, персик</div>
+      <div><strong>База:</strong> белые цветы, мускус, кедр, сандаловое дерево</div>
+      <div><strong>Тип аромата:</strong> цветочный, фруктовый, свежий</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'VOCE VIVA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, роза</div>
+      <div><strong>Ноты сердца:</strong> жасмин, кедровое дерево</div>
+      <div><strong>База:</strong> мускус</div>
+      <div><strong>Тип аромата:</strong> цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'LIBRE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> мандарин, апельсин</div>
+      <div><strong>Ноты сердца:</strong> жасмин, кедровое дерево</div>
+      <div><strong>База:</strong> мускус, пудровые ноты</div>
+      <div><strong>Тип аромата:</strong> цветочный, пудровый, древесный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'HYPNOTIC POISON') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> новые специи, абрикос, слива</div>
+      <div><strong>Ноты сердца:</strong> тубероза, жасмин, роза, ландыш</div>
+      <div><strong>База:</strong> сандаловое дерево, миндаль, ваниль</div>
+      <div><strong>Тип аромата:</strong> восточный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'EAU DE PARFUM') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> пион, фрезия, личи</div>
+      <div><strong>Ноты сердца:</strong> роза, магнолия, ландыш</div>
+      <div><strong>Базовые ноты:</strong> янтарь, кедровое дерево</div>
+      <div><strong>Тип аромата:</strong> цветочный, фруктовый</div>
+    `;
+  } else if (p.name === 'CODE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> итальянский апельсин</div>
+      <div><strong>Ноты сердца:</strong> цветок апельсина, жасмин</div>
+      <div><strong>База:</strong> мёд, ваниль</div>
+      <div><strong>Тип аромата:</strong> свежий, цветочный, сладкий</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'RUSH 2') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> фрезия, лилия, роза</div>
+      <div><strong>Ноты сердца:</strong> ландыш, гардения, пальмовое дерево, нарцисс</div>
+      <div><strong>База:</strong> чёрная смородина, пачули, дубовый мох</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'BOMBSHELL') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> грейпфрут, мандарин, зеленые ноты</div>
+      <div><strong>Ноты сердца:</strong> ландыш, гвоздика, водные ноты, персик, роза</div>
+      <div><strong>База:</strong> пачули, древесные ноты, амбра</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'BRIGHT CRYSTAL') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> гранатовое яблоко, юзу</div>
+      <div><strong>Ноты сердца:</strong> пион, магнолия, лотос</div>
+      <div><strong>База:</strong> амбра, пачули</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'DAISY') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> листья фиалки, розовый грейпфрут, лесные ягоды</div>
+      <div><strong>Ноты сердца:</strong> гардения, фиалка, жасмин</div>
+      <div><strong>База:</strong> пачули, белое дерево, ваниль</div>
+      <div><strong>Тип аромата:</strong> свежий, цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'ACQUA DI GIOIA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> лимон Амальфи, мята</div>
+      <div><strong>Ноты сердца:</strong> жасмин, розовый перец, пион</div>
+      <div><strong>База:</strong> французский лабданум, кедровое дерево, сахар</div>
+      <div><strong>Тип аромата:</strong> свежий, цветочный, водный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'STAR MAGNOLIA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> цитрон, груша, яблоко, бергамот</div>
+      <div><strong>Ноты сердца:</strong> магнолия, жасмин, роза, нероли</div>
+      <div><strong>База:</strong> ветивер, бальзам, амбра</div>
+    `;
+  } else if (p.name === 'PINK MOLECULE 090.09') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> абрикос</div>
+      <div><strong>Ноты сердца:</strong> амбра, дерево</div>
+      <div><strong>База:</strong> амбра, сливки, пачули</div>
+      <div><strong>Тип аромата:</strong> фруктовый, древесный</div>
+    `;
+  } else if (p.name === 'LAMAR') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> ананас, ягоды, яблоко, кардамон, кориандр</div>
+      <div><strong>Ноты сердца:</strong> роза, жасмин, магнолия</div>
+      <div><strong>База:</strong> ваниль, амбра, кашемировое кедровое дерево, мох, мускус</div>
+    `;
+  } else if (p.name === 'LIME BASIL & MANDARIN') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> мандарин, апельсин, бергамот</div>
+      <div><strong>Ноты сердца:</strong> жасмин, иланг-иланг, ирис</div>
+      <div><strong>База:</strong> дерево, бензоин, бальзам</div>
+    `;
+  } else if (p.name === 'SCANDAL WOMAN') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> апельсин, гардения</div>
+      <div><strong>Ноты сердца:</strong> мёд</div>
+      <div><strong>База:</strong> пачули</div>
+      <div><strong>Тип аромата:</strong> ориентальный, цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'BE DELICIOUS') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> магнолия, огурец, грейпфрут</div>
+      <div><strong>Ноты сердца:</strong> тубероза, фиалка, яблоко, ландыш, роза</div>
+      <div><strong>База:</strong> лесные ноты, мускус, белая амбра</div>
+      <div><strong>Тип аромата:</strong> цветочный, древесный, мускусный</div>
+    `;
+  } else if (p.name === 'LIGHT BLUE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> лимон, лемонграсс, яблоко</div>
+      <div><strong>Ноты сердца:</strong> белый жасмин, лилия, магнолия</div>
+      <div><strong>База:</strong> белый лес, мускус, амбра</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'CASSIOPEA') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> маракуйя, лимон, чёрная смородина, папоротник</div>
+      <div><strong>Ноты сердца:</strong> гвоздика, ландыш, роза</div>
+      <div><strong>Базовые ноты:</strong> сандал, бобы тонка, мускус</div>
+      <div><strong>Тип аромата:</strong> цветочный, фруктовый</div>
+    `;
+  } else if (p.name === 'ROSES MUSK') {
+    productDescription.innerHTML = `
+      <div><strong>Голова:</strong> роза, шафран</div>
+      <div><strong>Сердце:</strong> цветы, амбра</div>
+      <div><strong>Базовый аромат:</strong> мускус</div>
+      <div><strong>Тип аромата:</strong> цветочный, фруктовый</div>
+    `;
+  } else if (p.name === 'JASMIN NOIR') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> личи, мандарин, апельсин, персик, бергамот</div>
+      <div><strong>Ноты сердца:</strong> лилия, слива, жасмин, ландыш</div>
+      <div><strong>База:</strong> амбра, пачули, ваниль, ветивер</div>
+      <div><strong>Тип аромата:</strong> ориентальный, цветочный</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <div aria-label="Зима" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#edf8ff,#b8d9ff); box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:22px; line-height:1;">❄️</div>
+            <span style="font-size:11px; color:#fff; font-weight:600;">Зима</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'ANGE OU DEMON LE SECRET') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> апельсин, бергамот, мандарин</div>
+      <div><strong>Ноты сердца:</strong> мимоза, жасмин, роза, иланг-иланг</div>
+      <div><strong>База:</strong> пачули, бобы тонка, ваниль, ветивер</div>
+      <div><strong>Тип аромата:</strong> цветочный, цитрусовый, мягкий</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'THE NARCOTICS GOOD GIRL GONE BAD') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> роза, жонкил, жасмин</div>
+      <div><strong>Ноты сердца:</strong> тубероза, нарцисс</div>
+      <div><strong>База:</strong> амбра, кедровое дерево</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+        <strong>Сезон:</strong>
+        <div style="display:flex; gap:14px; align-items:flex-end; justify-content:flex-start; margin-top:8px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_58_04.png?v=1748350741&width=100" alt="Весна" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Весна</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_59_56.png?v=1748350823&width=100" alt="Лето" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Лето</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:58px;">
+            <img src="https://www.miniparfum.eu/cdn/shop/files/ChatGPT_Image_27._5._2025_14_56_08.png?v=1748350635&width=100" alt="Осень" style="width:40px; height:40px; border-radius:10px; object-fit:cover; background:#f3efe8; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <span style="font-size:11px; color:#fff; font-weight:600;">Осень</span>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (p.name === 'EX NIHILO BLUE TALISMAN') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> груша, бергамот, мандарин, апельсин, имбирь</div>
+      <div><strong>Ноты сердца:</strong> цветок апельсинового дерева, древесные ноты</div>
+      <div><strong>База:</strong> амбра, дерево, мускус</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">☀️</span> лето, <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else if (p.name === 'POMEGRANATE NOIR') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> гранатовое яблоко, слива, красные фрукты, розовый перец</div>
+      <div><strong>Ноты сердца:</strong> ландыш, гвоздика, роза, ладанный аромат</div>
+      <div><strong>База:</strong> кедровое дерево, пачули, мускус, древесные ноты</div>
+    `;
+  } else if (p.name === 'MUSK KASHMIR') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> цветочные ноты</div>
+      <div><strong>Ноты сердца:</strong> ландыш, древесные ноты</div>
+      <div><strong>База:</strong> мускус, ветивер, амбра</div>
+    `;
+  } else if (p.name === 'MOLECULE 02') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, груша, вишня</div>
+      <div><strong>Ноты сердца:</strong> тубероза, апельсиновый цвет, жасмин</div>
+      <div><strong>База:</strong> пачули, ветивер, амбра, карамель, ваниль</div>
+    `;
+  } else if (p.name === 'HER INTENSE') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> ежевика, красные фрукты, малина, яблоко</div>
+      <div><strong>Ноты сердца:</strong> гиацинт, фиалка, гелиотроп</div>
+      <div><strong>База:</strong> бензоин, кедровое дерево, амбра, дубовый мох</div>
+    `;
+  } else if (p.name === 'Alive Parfum') {
+    productDescription.innerHTML = `
+      <div><strong>Сердце:</strong> жасмин, тимьян</div>
+      <div><strong>База:</strong> кедровое и сандаловое дерево, оливковые ноты, древесные ноты</div>
+      <div><strong>Тип аромата:</strong> древесный, фруктовый</div>
+    `;
+  } else if (p.name === 'WOMAN') {
+    productDescription.innerHTML = '';
+  } else if (p.name === 'NO. 5') {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> альдегиды, нероли, иланг-иланг</div>
+      <div><strong>Ноты сердца:</strong> ирис, корень ириса, жасмин</div>
+      <div><strong>База:</strong> амбра, сандаловое дерево, мускус</div>
+      <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);"><strong>Сезон:</strong> <span style="font-size:12px;">🌼</span> весна, <span style="font-size:12px;">🍂</span> осень</div>
+    `;
+  } else {
+    productDescription.innerHTML = `
+      <div><strong>Верхние ноты:</strong> бергамот, апельсин, малина</div>
+      <div><strong>Ноты сердца:</strong> ветивер, магнолия, перец</div>
+      <div><strong>База:</strong> пачули, сандаловое дерево, амбра</div>
+      <div><strong>Тип аромата:</strong> цветочный, фруктовый</div>
+    `;
+  }
+  const addBtn = document.getElementById('pAddBtn');
+  if (p.stock) {
+    addBtn.textContent = 'Добавить в корзину';
+    addBtn.className = 'btn btn-primary';
+    addBtn.disabled = false;
+  } else {
+    addBtn.textContent = 'Нет в наличии';
+    addBtn.className = 'btn btn-disabled';
+    addBtn.disabled = true;
+  }
+  showSheet('productSheet');
+}
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateCartBar();
+  hideSheets();
+  try { Telegram.WebApp.HapticFeedback.notificationOccurred('success'); } catch (e) {}
+}
+
+function cartCount() {
+  return Object.values(cart).reduce((a, b) => a + b, 0);
+}
+function cartTotal() {
+  return Object.entries(cart).reduce((sum, [id, qty]) => sum + PRODUCTS_BY_ID[id].price * qty, 0);
+}
+
+function updateCartBar() {
+  const count = cartCount();
+  const bar = document.getElementById('cartBar');
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = cartTotal().toLocaleString('ru-RU') + ' Kč';
+  bar.classList.toggle('visible', count > 0);
+}
+
+function renderCart() {
+  const rows = document.getElementById('cartRows');
+  const footer = document.getElementById('cartFooter');
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+
+  if (!ids.length) {
+    rows.innerHTML = '<div class="cart-empty">Корзина пока пуста</div>';
+    footer.innerHTML = '';
+    return;
+  }
+
+  rows.innerHTML = ids.map(id => {
+    const p = PRODUCTS_BY_ID[id];
+    const qty = cart[id];
+    return `
+      <div class="cart-row">
+        <div class="cart-thumb">
+          ${p.image ? `<img src="${p.image}" alt="${p.name}">` : flaconSVG('var(--brass)')}
+        </div>
+        <div>
+          <div class="ci-name serif">${p.name}</div>
+          <div class="ci-price">${p.price.toLocaleString('ru-RU')} Kč</div>
+        </div>
+        <div class="qty">
+          <button data-act="dec" data-id="${id}">−</button>
+          <span>${qty}</span>
+          <button data-act="inc" data-id="${id}">+</button>
+        </div>
+        <div class="ci-price serif" style="font-size:16px;color:var(--brass)">${(p.price * qty).toLocaleString('ru-RU')} Kč</div>
+      </div>
+    `;
+  }).join('');
+
+  footer.innerHTML = `
+    <div id="cartDeliveryOptions" class="delivery-options"></div>
+    <div class="cart-total">
+      <span>Итого</span>
+      <strong>${cartTotalWithShipping().toLocaleString('ru-RU')} Kč</strong>
+    </div>
+    <button class="btn btn-primary" id="checkoutBtn">Оформить заказ</button>
+  `;
+  renderDeliveryOptions('cartDeliveryOptions');
+
+  rows.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      if (btn.dataset.act === 'inc') cart[id]++;
+      else {
+        cart[id]--;
+        if (cart[id] <= 0) delete cart[id];
+      }
+      updateCartBar();
+      renderCart();
+    });
+  });
+
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if (checkoutBtn) checkoutBtn.addEventListener('click', checkout);
+}
+
+function checkout() {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  if (!ids.length) return;
+
+  const lines = ids.map(id => {
+    const p = PRODUCTS_BY_ID[id];
+    const qty = cart[id];
+    return `${p.name} (${p.brand}) x${qty} — ${(p.price * qty).toLocaleString('ru-RU')} Kč`;
+  });
+  const total = cartTotalWithShipping();
+  const shipping = DELIVERY_OPTIONS[selectedDelivery];
+  const orderText = [
+    'Новый заказ ESSENS:',
+    ...lines,
+    `Доставка: ${shipping.label} (${shipping.price ? shipping.price.toLocaleString('ru-RU') + ' Kč' : 'бесплатно'})`,
+    `Итого: ${total.toLocaleString('ru-RU')} Kč`
+  ].join('\n');
+
+  try {
+    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.sendData) {
+      Telegram.WebApp.sendData(orderText);
+      Telegram.WebApp.close();
+      return;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  // Фолбэк, если открыто не внутри Telegram (для отладки в обычном браузере)
+  alert('Открыто вне Telegram — заказ не может быть отправлен боту.\n\n' + orderText);
+}
+
+/* ====== Sheets управление ====== */
+function showSheet(id) {
+  document.getElementById('overlay').classList.add('visible');
+  document.getElementById(id).classList.add('visible');
+}
+function hideSheets() {
+  document.getElementById('overlay').classList.remove('visible');
+  document.getElementById('productSheet').classList.remove('visible');
+  document.getElementById('cartSheet').classList.remove('visible');
+}
+
+document.getElementById('overlay').addEventListener('click', hideSheets);
+document.getElementById('pAddBtn').addEventListener('click', () => {
+  if (selectedProductId !== null) addToCart(selectedProductId);
+});
+document.getElementById('cartBar').addEventListener('click', () => {
+  renderCart();
+  showSheet('cartSheet');
+});
+
+const minPriceRange = document.getElementById('minPriceRange');
+const maxPriceRange = document.getElementById('maxPriceRange');
+
+minPriceRange.addEventListener('input', (event) => {
+  const nextMin = Number(event.target.value);
+  if (nextMin > priceFilter.max) {
+    priceFilter.max = nextMin;
+  }
+  priceFilter.min = nextMin;
+  renderPriceFilter();
+  renderList();
+});
+
+maxPriceRange.addEventListener('input', (event) => {
+  const nextMax = Number(event.target.value);
+  if (nextMax < priceFilter.min) {
+    priceFilter.min = nextMax;
+  }
+  priceFilter.max = nextMax;
+  renderPriceFilter();
+  renderList();
+});
+
+document.getElementById('resetPriceFilter').addEventListener('click', () => {
+  priceFilter.min = 0;
+  priceFilter.max = MAX_PRODUCT_PRICE;
+  renderPriceFilter();
+  renderList();
+});
+
+document.querySelectorAll('.sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    priceSort = btn.dataset.sort;
+    renderSortControls();
+    renderList();
+  });
+});
+
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    listView = btn.dataset.view;
+    renderViewControls();
+    renderList();
+  });
+});
+
+/* ====== Инициализация Telegram WebApp ====== */
+try {
+  if (window.Telegram && Telegram.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  }
+} catch (e) {}
+
+renderTabs();
+renderSortControls();
+renderViewControls();
+renderPriceFilter();
+renderList();
+updateCartBar();
+</script>
+
+<script>
+/* ====== Инлайн: telegram-web-app.js (официальный скрипт Telegram) ====== */
+// WebView
+(function () {
+  var eventHandlers = {};
+
+  var locationHash = '';
+  try {
+    locationHash = location.hash.toString();
+  } catch (e) {}
+
+  var initParams = urlParseHashParams(locationHash);
+  var storedParams = sessionStorageGet('initParams');
+  if (storedParams) {
+    for (var key in storedParams) {
+      if (typeof initParams[key] === 'undefined') {
+        initParams[key] = storedParams[key];
+      }
+    }
+  }
+  sessionStorageSet('initParams', initParams);
+
+  var isIframe = false, iFrameStyle;
+  try {
+    isIframe = (window.parent != null && window != window.parent);
+    if (isIframe) {
+      window.addEventListener('message', function (event) {
+        if (event.source !== window.parent) return;
+        try {
+          var dataParsed = JSON.parse(event.data);
+        } catch (e) {
+          return;
+        }
+        if (!dataParsed || !dataParsed.eventType) {
+          return;
+        }
+        if (dataParsed.eventType == 'set_custom_style') {
+          if (event.origin === 'https://web.telegram.org') {
+            iFrameStyle.innerHTML = dataParsed.eventData;
+          }
+        } else if (dataParsed.eventType == 'reload_iframe') {
+          try {
+            window.parent.postMessage(JSON.stringify({eventType: 'iframe_will_reload'}), '*');
+          } catch (e) {}
+          location.reload();
+        } else {
+          receiveEvent(dataParsed.eventType, dataParsed.eventData);
+        }
+      });
+      iFrameStyle = document.createElement('style');
+      document.head.appendChild(iFrameStyle);
+      try {
+        window.parent.postMessage(JSON.stringify({eventType: 'iframe_ready', eventData: {reload_supported: true}}), '*');
+      } catch (e) {}
+    }
+  } catch (e) {}
+
+  function urlSafeDecode(urlencoded) {
+    try {
+      urlencoded = urlencoded.replace(/\+/g, '%20');
+      return decodeURIComponent(urlencoded);
+    } catch (e) {
+      return urlencoded;
+    }
+  }
+
+  function urlParseHashParams(locationHash) {
+    locationHash = locationHash.replace(/^#/, '');
+    var params = {};
+    if (!locationHash.length) {
+      return params;
+    }
+    if (locationHash.indexOf('=') < 0 && locationHash.indexOf('?') < 0) {
+      params._path = urlSafeDecode(locationHash);
+      return params;
+    }
+    var qIndex = locationHash.indexOf('?');
+    if (qIndex >= 0) {
+      var pathParam = locationHash.substr(0, qIndex);
+      params._path = urlSafeDecode(pathParam);
+      locationHash = locationHash.substr(qIndex + 1);
+    }
+    var query_params = urlParseQueryString(locationHash);
+    for (var k in query_params) {
+      params[k] = query_params[k];
+    }
+    return params;
+  }
+
+  function urlParseQueryString(queryString) {
+    var params = {};
+    if (!queryString.length) {
+      return params;
+    }
+    var queryStringParams = queryString.split('&');
+    var i, param, paramName, paramValue;
+    for (i = 0; i < queryStringParams.length; i++) {
+      param = queryStringParams[i].split('=');
+      paramName = urlSafeDecode(param[0]);
+      paramValue = param[1] == null ? null : urlSafeDecode(param[1]);
+      params[paramName] = paramValue;
+    }
+    return params;
+  }
+
+  function urlAppendHashParams(url, addHash) {
+    var ind = url.indexOf('#');
+    if (ind < 0) {
+      return url + '#' + addHash;
+    }
+    var curHash = url.substr(ind + 1);
+    if (curHash.indexOf('=') >= 0 || curHash.indexOf('?') >= 0) {
+      return url + '&' + addHash;
+    }
+    if (curHash.length > 0) {
+      return url + '?' + addHash;
+    }
+    return url + addHash;
+  }
+
+  function postEvent(eventType, callback, eventData) {
+    if (!callback) {
+      callback = function () {};
+    }
+    if (eventData === undefined) {
+      eventData = '';
+    }
+    if (window.TelegramWebviewProxy !== undefined) {
+      TelegramWebviewProxy.postEvent(eventType, JSON.stringify(eventData));
+      callback();
+    }
+    else if (window.external && 'notify' in window.external) {
+      window.external.notify(JSON.stringify({eventType: eventType, eventData: eventData}));
+      callback();
+    }
+    else if (isIframe) {
+      try {
+        var trustedTarget = 'https://web.telegram.org';
+        trustedTarget = '*';
+        window.parent.postMessage(JSON.stringify({eventType: eventType, eventData: eventData}), trustedTarget);
+        callback();
+      } catch (e) {
+        callback(e);
+      }
+    }
+    else {
+      callback({notAvailable: true});
+    }
+  };
+
+  function receiveEvent(eventType, eventData) {
+    callEventCallbacks(eventType, function(callback) {
+      callback(eventType, eventData);
+    });
+  }
+
+  function callEventCallbacks(eventType, func) {
+    var curEventHandlers = eventHandlers[eventType];
+    if (curEventHandlers === undefined ||
+        !curEventHandlers.length) {
+      return;
+    }
+    for (var i = 0; i < curEventHandlers.length; i++) {
+      try {
+        func(curEventHandlers[i]);
+      } catch (e) {}
+    }
+  }
+
+  function onEvent(eventType, callback) {
+    if (eventHandlers[eventType] === undefined) {
+      eventHandlers[eventType] = [];
+    }
+    var index = eventHandlers[eventType].indexOf(callback);
+    if (index === -1) {
+      eventHandlers[eventType].push(callback);
+    }
+  };
+
+  function offEvent(eventType, callback) {
+    if (eventHandlers[eventType] === undefined) {
+      return;
+    }
+    var index = eventHandlers[eventType].indexOf(callback);
+    if (index === -1) {
+      return;
+    }
+    eventHandlers[eventType].splice(index, 1);
+  };
+
+  function sessionStorageSet(key, value) {
+    try {
+      window.sessionStorage.setItem('__telegram__' + key, JSON.stringify(value));
+      return true;
+    } catch(e) {}
+    return false;
+  }
+  function sessionStorageGet(key) {
+    try {
+      return JSON.parse(window.sessionStorage.getItem('__telegram__' + key));
+    } catch(e) {}
+    return null;
+  }
+
+  if (!window.Telegram) {
+    window.Telegram = {};
+  }
+  window.Telegram.WebView = {
+    initParams: initParams,
+    isIframe: isIframe,
+    onEvent: onEvent,
+    offEvent: offEvent,
+    postEvent: postEvent,
+    receiveEvent: receiveEvent,
+    callEventCallbacks: callEventCallbacks
+  };
+
+  window.Telegram.Utils = {
+    urlSafeDecode: urlSafeDecode,
+    urlParseQueryString: urlParseQueryString,
+    urlParseHashParams: urlParseHashParams,
+    urlAppendHashParams: urlAppendHashParams,
+    sessionStorageSet: sessionStorageSet,
+    sessionStorageGet: sessionStorageGet
+  };
+
+  window.TelegramGameProxy_receiveEvent = receiveEvent;
+  window.TelegramGameProxy = {
+    receiveEvent: receiveEvent
+  };
+})();
+
+// WebApp
+(function () {
+  var Utils = window.Telegram.Utils;
+  var WebView = window.Telegram.WebView;
+  var initParams = WebView.initParams;
+  var isIframe = WebView.isIframe;
+
+  var WebApp = {};
+  var webAppInitData = '', webAppInitDataUnsafe = {};
+  var themeParams = {}, colorScheme = 'light';
+  var webAppVersion = '6.0';
+  var webAppPlatform = 'unknown';
+  var webAppIsActive = true;
+  var webAppIsFullscreen = false;
+  var webAppIsOrientationLocked = false;
+  var webAppBackgroundColor = 'bg_color';
+  var webAppHeaderColorKey = 'bg_color';
+  var webAppHeaderColor = null;
+
+  if (initParams.tgWebAppData && initParams.tgWebAppData.length) {
+    webAppInitData = initParams.tgWebAppData;
+    webAppInitDataUnsafe = Utils.urlParseQueryString(webAppInitData);
+    for (var key in webAppInitDataUnsafe) {
+      var val = webAppInitDataUnsafe[key];
+      try {
+        if (val.substr(0, 1) == '{' && val.substr(-1) == '}' ||
+            val.substr(0, 1) == '[' && val.substr(-1) == ']') {
+          webAppInitDataUnsafe[key] = JSON.parse(val);
+        }
+      } catch (e) {}
+    }
+  }
+  var stored_theme_params = Utils.sessionStorageGet('themeParams');
+  if (initParams.tgWebAppThemeParams && initParams.tgWebAppThemeParams.length) {
+    var themeParamsRaw = initParams.tgWebAppThemeParams;
+    try {
+      var theme_params = JSON.parse(themeParamsRaw);
+      if (theme_params) {
+        setThemeParams(theme_params);
+      }
+    } catch (e) {}
+  }
+  if (stored_theme_params) {
+    setThemeParams(stored_theme_params);
+  }
+  if (initParams.tgWebAppVersion) {
+    webAppVersion = initParams.tgWebAppVersion;
+  }
+  if (initParams.tgWebAppPlatform) {
+    webAppPlatform = initParams.tgWebAppPlatform;
+  }
+
+  function onThemeChanged(eventType, eventData) {
+    if (eventData.theme_params) {
+      setThemeParams(eventData.theme_params);
+      receiveWebViewEvent('themeChanged');
+    }
+  }
+
+  function receiveWebViewEvent(eventType) {
+    var args = Array.prototype.slice.call(arguments);
+    eventType = args.shift();
+    WebView.callEventCallbacks('webview:' + eventType, function(callback) {
+      callback.apply(WebApp, args);
+    });
+  }
+
+  function onWebViewEvent(eventType, callback) {
+    WebView.onEvent('webview:' + eventType, callback);
+  };
+
+  function setCssProperty(name, value) {
+    var root = document.documentElement;
+    if (root && root.style && root.style.setProperty) {
+      root.style.setProperty('--tg-' + name, value);
+    }
+  }
+
+  function parseColorToHex(color) {
+    color += '';
+    var match;
+    if (match = /^\s*#([0-9a-f]{6})\s*$/i.exec(color)) {
+      return '#' + match[1].toLowerCase();
+    }
+    else if (match = /^\s*#([0-9a-f])([0-9a-f])([0-9a-f])\s*$/i.exec(color)) {
+      return ('#' + match[1] + match[1] + match[2] + match[2] + match[3] + match[3]).toLowerCase();
+    }
+    return false;
+  }
+
+  function isColorDark(rgb) {
+    rgb = rgb.replace(/[\s#]/g, '');
+    if (rgb.length == 3) {
+      rgb = rgb[0] + rgb[0] + rgb[1] + rgb[1] + rgb[2] + rgb[2];
+    }
+    var r = parseInt(rgb.substr(0, 2), 16);
+    var g = parseInt(rgb.substr(2, 2), 16);
+    var b = parseInt(rgb.substr(4, 2), 16);
+    var hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+    return hsp < 120;
+  }
+
+  function setThemeParams(theme_params) {
+    var color;
+    for (var key in theme_params) {
+      if (color = parseColorToHex(theme_params[key])) {
+        themeParams[key] = color;
+        if (key == 'bg_color') {
+          colorScheme = isColorDark(color) ? 'dark' : 'light'
+          setCssProperty('color-scheme', colorScheme);
+        }
+        key = 'theme-' + key.split('_').join('-');
+        setCssProperty(key, color);
+      }
+    }
+    Utils.sessionStorageSet('themeParams', themeParams);
+  }
+
+  function versionCompare(v1, v2) {
+    if (typeof v1 !== 'string') v1 = '';
+    if (typeof v2 !== 'string') v2 = '';
+    v1 = v1.replace(/^\s+|\s+$/g, '').split('.');
+    v2 = v2.replace(/^\s+|\s+$/g, '').split('.');
+    var a = Math.max(v1.length, v2.length), i, p1, p2;
+    for (i = 0; i < a; i++) {
+      p1 = parseInt(v1[i]) || 0;
+      p2 = parseInt(v2[i]) || 0;
+      if (p1 == p2) continue;
+      if (p1 > p2) return 1;
+      return -1;
+    }
+    return 0;
+  }
+  function versionAtLeast(ver) {
+    return versionCompare(webAppVersion, ver) >= 0;
+  }
+
+  function byteLength(str) {
+    if (window.Blob) {
+      try { return new Blob([str]).size; } catch (e) {}
+    }
+    var s = str.length;
+    for (var i=str.length-1; i>=0; i--) {
+      var code = str.charCodeAt(i);
+      if (code > 0x7f && code <= 0x7ff) s++;
+      else if (code > 0x7ff && code <= 0xffff) s+=2;
+      if (code >= 0xdc00 && code <= 0xdfff) i--;
+    }
+    return s;
+  }
+
+  var HapticFeedback = (function() {
+    var hapticFeedback = {};
+    function triggerFeedback(params) {
+      if (!versionAtLeast('6.1')) {
+        return hapticFeedback;
+      }
+      WebView.postEvent('web_app_trigger_haptic_feedback', false, params);
+      return hapticFeedback;
+    }
+    hapticFeedback.impactOccurred = function(style) {
+      return triggerFeedback({type: 'impact', impact_style: style});
+    };
+    hapticFeedback.notificationOccurred = function(type) {
+      return triggerFeedback({type: 'notification', notification_type: type});
+    };
+    hapticFeedback.selectionChanged = function() {
+      return triggerFeedback({type: 'selection_change'});
+    };
+    return hapticFeedback;
+  })();
+
+  if (!window.Telegram) {
+    window.Telegram = {};
+  }
+
+  Object.defineProperty(WebApp, 'initData', { get: function(){ return webAppInitData; }, enumerable: true });
+  Object.defineProperty(WebApp, 'initDataUnsafe', { get: function(){ return webAppInitDataUnsafe; }, enumerable: true });
+  Object.defineProperty(WebApp, 'version', { get: function(){ return webAppVersion; }, enumerable: true });
+  Object.defineProperty(WebApp, 'platform', { get: function(){ return webAppPlatform; }, enumerable: true });
+  Object.defineProperty(WebApp, 'colorScheme', { get: function(){ return colorScheme; }, enumerable: true });
+  Object.defineProperty(WebApp, 'themeParams', { get: function(){ return themeParams; }, enumerable: true });
+  Object.defineProperty(WebApp, 'isActive', { get: function(){ return webAppIsActive; }, enumerable: true });
+  Object.defineProperty(WebApp, 'HapticFeedback', { value: HapticFeedback, enumerable: true });
+
+  WebApp.isVersionAtLeast = function(ver) { return versionAtLeast(ver); };
+  WebApp.onEvent = function(eventType, callback) { onWebViewEvent(eventType, callback); };
+  WebApp.sendData = function (data) {
+    if (!data || !data.length) {
+      throw Error('WebAppDataInvalid');
+    }
+    if (byteLength(data) > 4096) {
+      throw Error('WebAppDataInvalid');
+    }
+    WebView.postEvent('web_app_data_send', false, {data: data});
+  };
+  WebApp.ready = function () {
+    WebView.postEvent('web_app_ready');
+  };
+  WebApp.expand = function () {
+    WebView.postEvent('web_app_expand');
+  };
+  WebApp.close = function (options) {
+    options = options || {};
+    var req_params = {};
+    if (versionAtLeast('7.6') && options.return_back) {
+      req_params.return_back = true;
+    }
+    WebView.postEvent('web_app_close', false, req_params);
+  };
+
+  window.Telegram.WebApp = WebApp;
+
+  WebView.onEvent('theme_changed', onThemeChanged);
+  WebView.postEvent('web_app_request_theme');
+  WebView.postEvent('web_app_request_viewport');
+})();
+</script>
+</body>
+</html>
